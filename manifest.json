@@ -1,0 +1,15 @@
+{
+  "name": "Private Comments for GitHub",
+  "short_name": "Commants",
+  "version": "0.0.1",
+  "manifest_version": 2,
+  "description": "Chrome extension for adding private comments in Github",
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "content_scripts": [
+    {
+      "matches": ["https://github.com/", "https://github.com/orgs/*/dashboard"],
+      "css": ["index.css"],
+      "js": ["index.js"]
+    }
+  ]
+}
