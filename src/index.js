@@ -1,7 +1,8 @@
 import Quill from 'quill';
+import './quill.css';
 import './style.css';
-// Could break if GitHub changes its markup
 
+// Could break if GitHub changes its markup
 function init() {
     //   const details = document.createElement('details');
     //   details.classList.add('position-relative', 'js-dropdown-details');

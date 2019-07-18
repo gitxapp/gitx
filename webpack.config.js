@@ -31,7 +31,7 @@ module.exports = {
       filename: "./index.html"
     }),
     new CopyWebpackPlugin([
-      { from: 'manifest.json' }
+      { from: 'manifest.json' }, { from: 'src/quil.js' }
     ])
   ]
 };

@@ -5,11 +5,14 @@
   "manifest_version": 2,
   "description": "Chrome extension for adding private comments in Github",
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "browser_action": {
+    "default_popup": "index.html",
+    "default_title": "Eye Blinker"
+  },
   "content_scripts": [
     {
       "matches": ["https://github.com/", "https://github.com/*/issues/*"],
-      "css": ["index.css"],
-      "js": ["index.js"]
+      "js": ["main.js"]
     }
   ]
 }
