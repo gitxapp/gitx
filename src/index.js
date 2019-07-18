@@ -1,4 +1,5 @@
 import Quill from 'quill';
+import './style.css';
 // Could break if GitHub changes its markup
 
 function init() {
