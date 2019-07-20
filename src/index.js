@@ -4,7 +4,7 @@ import './style.css';
 
 function createTextEditorBtn(index) {
   const button = document.createElement('button');
-  button.textContent = 'Add private comments';
+  button.textContent = 'Add private notes';
   button.id = `showEditor${index}`;
   button.value = index;
   button.classList.add('pvt-cmt-btn');
@@ -18,7 +18,7 @@ function createTextEditorBtn(index) {
 
 function closeTextEditorBtn(index) {
   const button = document.createElement('button');
-  button.textContent = 'Save comments';
+  button.textContent = 'Save notes';
   button.id = `closeEditor${index}`;
   button.value = index;
   button.classList.add('pvt-cmt-btn');
