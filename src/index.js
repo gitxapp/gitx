@@ -2,25 +2,35 @@ import Quill from 'quill';
 import './quill.css';
 import './style.css';
 
-function createTextEditorBtn(index) {
+function getTextAreaInput () {
+  const textArea = document.getElementById('new_comment_field');
+  textArea.addEventListener('blur', (e) => {
+    console.log(e.target.value);
+  })
+}
+
+function createTextEditorBtn() {
   const button = document.createElement('button');
   button.textContent = 'Add private notes';
-  button.id = `showEditor${index}`;
-  button.value = index;
-  button.classList.add('pvt-cmt-btn');
+  button.id = `showEditor`;
+  button.type = 'button';
+  button.classList.add('btn');
+  button.classList.add('btn-primary');
+  button.disabled = 
   button.onclick = function (e) {
     document.getElementById(`parent${e.target.value}`).style.display = 'block';
     document.getElementById(`closeEditor${e.target.value}`).style.display = 'block';
     button.style.display = 'none';
   }
+  getTextAreaInput();
   return button
 }
 
-function closeTextEditorBtn(index) {
+function closeTextEditorBtn() {
   const button = document.createElement('button');
   button.textContent = 'Save notes';
-  button.id = `closeEditor${index}`;
-  button.value = index;
+  button.id = 'closeEditor';
+  button.type = 'button';
   button.classList.add('pvt-cmt-btn');
   button.classList.add('close-editor');
   button.style.display = 'none';
@@ -33,25 +43,31 @@ function closeTextEditorBtn(index) {
 }
 
 
-function createEditorWrapper(index) {
+function createEditorWrapper() {
   const parent = document.createElement('div');
   const div = document.createElement('div');
-  parent.id = `parent${index}`
+  parent.id = 'parent'
   parent.classList.add('parent')
-  div.id = `editor${index}`;
+  div.id = 'editor';
   div.classList.add('editor');
   parent.style.display = 'none';
   parent.appendChild(div);
   return parent;
 }
 
-function createEditor(index) {
-  const editor = new Quill(`#editor${index}`, {
+function createEditor() {
+  const editor = new Quill('#editor', {
     modules: {
       toolbar: [
-        [{ header: [1, 2, false] }],
+        [{
+          header: [1, 2, false]
+        }],
         ['bold', 'italic', 'underline'],
-        ['code-block', { list: 'ordered' }, { list: 'bullet' }]
+        ['code-block', {
+          list: 'ordered'
+        }, {
+          list: 'bullet'
+        }]
       ]
     },
     placeholder: 'Compose an epic...',
@@ -59,8 +75,7 @@ function createEditor(index) {
   });
   if (editor && editor.on) {
     editor.on('editor-change', function (eventName, range, oldRange, source) {
-      if (eventName === 'text-change') {
-      } else if (eventName === 'selection-change') {
+      if (eventName === 'text-change') {} else if (eventName === 'selection-change') {
         if (!range) {
           console.log(editor.root.innerHTML)
           editor.root.innerHTML = '<p>sdfdddddgh<strong>dfghdfg</strong></p>'
@@ -72,24 +87,16 @@ function createEditor(index) {
 
 // Could break if GitHub changes its markup
 function init() {
-  const positionMarkers = document.getElementsByClassName('js-comment');
-  let positionMarkersCount = 0;
-  Array.prototype.forEach.call(positionMarkers, (positionMarker, index) => {
-    if (positionMarker) {
-      positionMarkersCount += 1;
-      const div = document.createElement('div');
-      div.setAttribute('class', 'post');
-      div.appendChild(createTextEditorBtn(index));
-      div.appendChild(createEditorWrapper(index));
-      div.appendChild(closeTextEditorBtn(index));
-      positionMarker.after(div);
-    } else {
-      console.log('Dashboard extension: position marker not found.');
-    }
-  });
-  while(positionMarkersCount > 0) {
-    createEditor(positionMarkersCount - 1);
-    positionMarkersCount -= 1;
+  const positionMarker = document.getElementById('partial-new-comment-form-actions');
+  if (positionMarker) {
+    const div = document.createElement('div');
+    div.setAttribute('class', 'post');
+    div.appendChild(createTextEditorBtn());
+    div.appendChild(createEditorWrapper());
+    div.appendChild(closeTextEditorBtn());
+    positionMarker.after(div);
+  } else {
+    console.log('Dashboard extension: position marker not found.');
   }
 }
 init();
