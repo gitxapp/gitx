@@ -1,12 +1,30 @@
-import Quill from 'quill';
-import './quill.css';
 import './style.css';
+import creteNoteBox from './noteBox';
+
+function toggleDisabled(e) {
+  const showTextButton = document.getElementById('showEditor');
+  if (e.target.value.length > 0) {
+    showTextButton.disabled = false;
+  } else {
+    showTextButton.disabled = true;
+  }
+}
+
+
 
 function getTextAreaInput () {
   const textArea = document.getElementById('new_comment_field');
-  textArea.addEventListener('blur', (e) => {
-    console.log(e.target.value);
-  })
+  textArea.addEventListener('onblur', (e) => {
+    console.log(e.target.value)
+
+  });
+  textArea.addEventListener('change', (e) => {
+    toggleDisabled(e);
+  });
+  textArea.addEventListener('input', (e) => {
+    toggleDisabled(e);
+  });
+
 }
 
 function createTextEditorBtn() {
@@ -16,13 +34,12 @@ function createTextEditorBtn() {
   button.type = 'button';
   button.classList.add('btn');
   button.classList.add('btn-primary');
-  button.disabled = 
+  button.disabled = true;
   button.onclick = function (e) {
     document.getElementById(`parent${e.target.value}`).style.display = 'block';
     document.getElementById(`closeEditor${e.target.value}`).style.display = 'block';
     button.style.display = 'none';
   }
-  getTextAreaInput();
   return button
 }
 
@@ -42,61 +59,21 @@ function closeTextEditorBtn() {
   return button
 }
 
-
-function createEditorWrapper() {
-  const parent = document.createElement('div');
-  const div = document.createElement('div');
-  parent.id = 'parent'
-  parent.classList.add('parent')
-  div.id = 'editor';
-  div.classList.add('editor');
-  parent.style.display = 'none';
-  parent.appendChild(div);
-  return parent;
-}
-
-function createEditor() {
-  const editor = new Quill('#editor', {
-    modules: {
-      toolbar: [
-        [{
-          header: [1, 2, false]
-        }],
-        ['bold', 'italic', 'underline'],
-        ['code-block', {
-          list: 'ordered'
-        }, {
-          list: 'bullet'
-        }]
-      ]
-    },
-    placeholder: 'Compose an epic...',
-    theme: 'snow'
-  });
-  if (editor && editor.on) {
-    editor.on('editor-change', function (eventName, range, oldRange, source) {
-      if (eventName === 'text-change') {} else if (eventName === 'selection-change') {
-        if (!range) {
-          console.log(editor.root.innerHTML)
-          editor.root.innerHTML = '<p>sdfdddddgh<strong>dfghdfg</strong></p>'
-        }
-      }
-    });
-  }
-}
-
 // Could break if GitHub changes its markup
 function init() {
+  getTextAreaInput();
   const positionMarker = document.getElementById('partial-new-comment-form-actions');
   if (positionMarker) {
     const div = document.createElement('div');
     div.setAttribute('class', 'post');
     div.appendChild(createTextEditorBtn());
-    div.appendChild(createEditorWrapper());
     div.appendChild(closeTextEditorBtn());
-    positionMarker.after(div);
+    positionMarker.prepend(div);
+    creteNoteBox();
   } else {
     console.log('Dashboard extension: position marker not found.');
   }
 }
-init();
+window.onload = () => {
+  init();
+};

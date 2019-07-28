@@ -1,20 +1,17 @@
 .parent {
     display: none;
 }
-.ql-editor  {
-    border-top: 0px;
-    min-height: 150px;
-}
 .post {
     background-color: white;
-    margin-right: 15px;
+    margin-left: 5px;
     overflow: auto;
     float: right;
 }
  
 .pvt-cmt-btn {
-    background-color: #2cbe4e;
-    color: white;
+    background-color: #28a745;
+    background-image: linear-gradient(-180deg,#34d058,#28a745 90%);
+    color: #fff;
     border: 1px;
     border-radius: 3px;
     height: 34px;
