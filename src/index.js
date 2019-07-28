@@ -1,77 +1,79 @@
-import './style.css';
-import creteNoteBox from './noteBox';
+// Could break if GitHub changes its markup
 
-function toggleDisabled(e) {
-  const showTextButton = document.getElementById('showEditor');
+import './style.css';
+import createNoteBox from './noteBox';
+
+// Disable/Enable Add private button based on value entered
+function onInputValueChange(e) {
+  const addPrivateNoteButton = document.getElementById('add_private_note_button');
   if (e.target.value.length > 0) {
-    showTextButton.disabled = false;
+    addPrivateNoteButton.disabled = false;
   } else {
-    showTextButton.disabled = true;
+    addPrivateNoteButton.disabled = true;
   }
 }
 
-
-
-function getTextAreaInput () {
+// Load main input area and add some behaviors
+function initInputArea() {
   const textArea = document.getElementById('new_comment_field');
-  textArea.addEventListener('onblur', (e) => {
-    console.log(e.target.value)
-
+  textArea.addEventListener('onblur', e => {
+    console.log('Value', e.target.value);
   });
-  textArea.addEventListener('change', (e) => {
-    toggleDisabled(e);
+  textArea.addEventListener('change', e => {
+    onInputValueChange(e);
   });
-  textArea.addEventListener('input', (e) => {
-    toggleDisabled(e);
+  textArea.addEventListener('input', e => {
+    onInputValueChange(e);
   });
-
 }
 
-function createTextEditorBtn() {
+// Create add private note  button
+function createPrivateNoteAddButton() {
   const button = document.createElement('button');
   button.textContent = 'Add private notes';
-  button.id = `showEditor`;
+  button.id = `add_private_note_button`;
   button.type = 'button';
   button.classList.add('btn');
   button.classList.add('btn-primary');
   button.disabled = true;
-  button.onclick = function (e) {
+  button.onclick = function(e) {
     document.getElementById(`parent${e.target.value}`).style.display = 'block';
-    document.getElementById(`closeEditor${e.target.value}`).style.display = 'block';
+    document.getElementById(`close_private_note_button${e.target.value}`).style.display = 'block';
     button.style.display = 'none';
-  }
-  return button
+  };
+  return button;
 }
 
-function closeTextEditorBtn() {
+// Create close private note  button
+
+function createPrivateNoteCloseButton() {
   const button = document.createElement('button');
   button.textContent = 'Save notes';
-  button.id = 'closeEditor';
+  button.id = 'close_private_note_button';
   button.type = 'button';
   button.classList.add('pvt-cmt-btn');
   button.classList.add('close-editor');
   button.style.display = 'none';
-  button.onclick = function (e) {
+  button.onclick = function(e) {
     document.getElementById(`parent${e.target.value}`).style.display = 'none';
-    document.getElementById(`showEditor${e.target.value}`).style.display = 'block';
+    document.getElementById(`add_private_note_button${e.target.value}`).style.display = 'block';
     button.style.display = 'none';
-  }
-  return button
+  };
+  return button;
 }
 
-// Could break if GitHub changes its markup
 function init() {
-  getTextAreaInput();
+  initInputArea();
   const positionMarker = document.getElementById('partial-new-comment-form-actions');
   if (positionMarker) {
     const div = document.createElement('div');
     div.setAttribute('class', 'post');
-    div.appendChild(createTextEditorBtn());
-    div.appendChild(closeTextEditorBtn());
+    div.appendChild(createPrivateNoteAddButton());
+    div.appendChild(createPrivateNoteCloseButton());
     positionMarker.prepend(div);
-    creteNoteBox();
+    createNoteBox();
   } else {
-    console.log('Dashboard extension: position marker not found.');
+    console.log('Extension: position marker not found.');
   }
 }
 window.onload = () => {
