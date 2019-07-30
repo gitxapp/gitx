@@ -2,6 +2,7 @@
 import createNoteBox from './noteBox';
 import minAjax from './ajax';
 import { URL } from './constants';
+import './style.css';
 
 const userId = '5d4014afee31519f2dbcecd2';
 let note = null;

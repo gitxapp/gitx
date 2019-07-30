@@ -10,8 +10,14 @@ function createCommentBox(index) {
 
   const timeLineAction = document.createElement('div');
   timeLineAction.classList = ['timeline-comment-actions js-timeline-comment-actions'];
+
+  const privateNoteLabel = document.createElement('span');
+  privateNoteLabel.classList = ['timeline-comment-label tooltipped tooltipped-multiline tooltipped-s pvt-note-label'];
+  privateNoteLabel.setAttribute('aria-label', 'This is a private note');
+  privateNoteLabel.innerText = 'Private note';
+  timeLineAction.append(privateNoteLabel);
   const timeLineActionDetails = document.createElement('details');
-  timeLineActionDetails.classList = ['details-overlay details-reset position-relative d-inline-block '];
+  timeLineActionDetails.classList = ['details-overlay details-reset position-relative d-inline-block'];
   timeLineActionDetails.innerHTML = `<summary class="btn-link timeline-comment-action" aria-haspopup="menu">
     <svg aria-label="Show options" class="octicon octicon-kebab-horizontal" viewBox="0 0 13 16" version="1.1" width="13" height="16" role="img"><path fill-rule="evenodd" d="M1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm5 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM13 7.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"></path></svg>
     </summary>

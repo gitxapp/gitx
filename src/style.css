@@ -1,0 +1,9 @@
+.pvt-note-label {
+    float: left;
+    background-color: #2cbe4e;
+    color: white;
+    float: left;
+    border-radius: 3px;
+    padding: 4px 8px;
+    text-align: center;
+}
