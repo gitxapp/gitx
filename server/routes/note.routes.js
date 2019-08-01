@@ -6,5 +6,5 @@ const router = Router();
 // Create a new note
 router.post('/', NoteController.createNoteController);
 // Get note details from userId
-router.get('/:id', NoteController.getNotesController);
+router.get('/:userId/issue/:issueId', NoteController.getNotesController);
 export default router;

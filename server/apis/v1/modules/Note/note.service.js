@@ -26,9 +26,9 @@ async function createNote(noteDetails) {
   }
 }
 
-async function getNotes(id) {
+async function getNotes(userId, issueId) {
   try {
-    const notes = await Note.find({ userId: id }).populate('userId', 'userName avatarUrl githubId');
+    const notes = await Note.find({ $and: { userId, issueId } }).populate('userId', 'userName avatarUrl githubId');
     return {
       status: 200,
       message: 'Fetched notes',
