@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Hello</title>
+  </head>
+
+  <body></body>
+  <script>
+    const query = window.location.search.substring(1);
+    const name = query.split('name=')[1];
+
+    const nameNode = document.createTextNode(`Welcome, ${name}`);
+    document.body.appendChild(nameNode);
+  </script>
+</html>
