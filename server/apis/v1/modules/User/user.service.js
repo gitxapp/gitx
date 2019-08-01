@@ -5,8 +5,9 @@ async function createUser(userDetails) {
   try {
     await user.save();
     return {
-      user,
+      data: user,
       status: 200,
+      message: 'User created',
     };
   } catch (err) {
     if (err.name === 'MongoError' && err.code === 11000) {
