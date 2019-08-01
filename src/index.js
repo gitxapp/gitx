@@ -29,14 +29,32 @@ function onInputValueChange(e) {
 // Load main input area and add some behaviors
 function initInputArea() {
   const textArea = document.getElementById('new_comment_field');
-  textArea.addEventListener('change', e => {
-    onInputValueChange(e);
-  });
-  textArea.addEventListener('input', e => {
-    onInputValueChange(e);
-  });
+  if (textArea) {
+    textArea.addEventListener('change', e => {
+      onInputValueChange(e);
+    });
+    textArea.addEventListener('input', e => {
+      onInputValueChange(e);
+    });
+  }
 }
 
+function deleteNote(noteId) {
+  console.log('deleteNote', noteId);
+  minAjax({
+    url: `${URL}${VERSION}/note/delete/${noteId}`, // request URL
+    type: 'POST', // Request type GET/POST
+    success() {
+      const commentBoxes = document.querySelectorAll('.private-note');
+      commentBoxes.forEach(commentBox => {
+        const commentBoxPrivateId = commentBox.getAttribute('private-id');
+        if (commentBoxPrivateId === noteId) {
+          commentBox.remove();
+        }
+      });
+    },
+  });
+}
 // Create add private note  button
 function createPrivateNoteAddButton() {
   const button = document.createElement('button');
@@ -87,7 +105,7 @@ function init() {
   const positionMarker = document.getElementById('partial-new-comment-form-actions');
   if (positionMarker) {
     minAjax({
-      url: `${URL}${VERSION}/note/${userId}`, // request URL
+      url: `${URL}${VERSION}/note/${userId}/issue/${issueId}`, // request URL
       type: 'GET', // Request type GET/POST
       success(results) {
         // Retrieve all the notes based on issue id
@@ -107,6 +125,12 @@ function init() {
               const notesNearestToCommentBox = allNotes.filter(findNotesNearestToComment);
               notesNearestToCommentBox.reverse().forEach(element => {
                 commentBox.after(createNoteBox(element));
+                if (commentBox) {
+                  document.getElementById(`comment-box-${element._id}`).addEventListener('click', e => {
+                    console.log('deleteNote', element);
+                    deleteNote(element._id);
+                  });
+                }
               });
             }
           });

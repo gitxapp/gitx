@@ -1,6 +1,6 @@
 function createCommentBox(noteDetail) {
   const wrapper = document.createElement('div');
-  wrapper.classList = ['timeline-comment-group js-minimizable-comment-group js-targetable-comment'];
+  wrapper.classList = ['timeline-comment-group js-minimizable-comment-group js-targetable-comment '];
   const content = document.createElement('div');
   content.classList = [
     'unminimized-comment comment previewable-edit js-task-list-container editable-comment js-comment timeline-comment reorderable-task-lists current-user',
@@ -89,6 +89,7 @@ function createAvatar() {
 export default function createNoteBox(noteDetail) {
   const noteNode = document.createElement('div');
   noteNode.classList = ['timeline-comment-wrapper js-comment-container private-note'];
+  noteNode.setAttribute('private-id', noteDetail._id);
   noteNode.appendChild(createAvatar());
   noteNode.appendChild(createCommentBox(noteDetail));
   return noteNode;
