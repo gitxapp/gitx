@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 
 import { json, urlencoded } from 'body-parser';
 import { mongoURI } from './config/keys';
+import routes from './routes';
 
 function connect() {
   const options = {
@@ -34,7 +35,7 @@ app.use(
   }),
 );
 // API Routes
-app.use('/api', require('./routes/index').default);
+app.use('/api/v1', routes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
