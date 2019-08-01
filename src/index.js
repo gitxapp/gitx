@@ -1,10 +1,10 @@
 // Could break if GitHub changes its markup
 import createNoteBox from './noteBox';
 import minAjax from './ajax';
-import { URL } from './constants';
+import { URL, VERSION } from './constants';
 import './style.css';
 // Retrieve user id from session
-const userId = '5d4145e999c6db6b9d23380b';
+const userId = '5d42b6989e03e3b25c0c73e9';
 let noteContent = '';
 let allNotes = [];
 let nearestCommentId = null;
@@ -19,7 +19,7 @@ const noteType = currentUrl.includes('issue') ? 'issue' : 'pull';
 function onInputValueChange(e) {
   const addPrivateNoteButton = document.getElementById('add_private_note_button');
   noteContent = e.target.value;
-  if (e.target.value.length > 0) {
+  if (e.target.value.length > 0 && addPrivateNoteButton) {
     addPrivateNoteButton.disabled = false;
   } else {
     addPrivateNoteButton.disabled = true;
@@ -55,7 +55,7 @@ function createPrivateNoteAddButton() {
     let nearestBox = commentBoxes[commentBoxCount - 2].querySelector('.js-comment-container [id]').id;
     nearestCommentId = nearestBox.split('-').pop();
     minAjax({
-      url: `${URL}note`, // request URL
+      url: `${URL}${VERSION}/note`, // request URL
       type: 'POST', // Request type GET/POST
       data: {
         userId,
@@ -64,8 +64,12 @@ function createPrivateNoteAddButton() {
         issueId,
         nearestCommentId,
       },
-      success(data) {
-        allNotes.push(JSON.parse(data));
+      success(result) {
+        const formattedResult = JSON.parse(result);
+
+        const newlyCreatedNote = formattedResult.data;
+
+        allNotes.push(newlyCreatedNote);
         commentBoxes = document.querySelectorAll('.js-comment-container');
         commentBoxCount = commentBoxes.length;
         nearestBox = commentBoxes[commentBoxCount - 2];
@@ -83,26 +87,30 @@ function init() {
   const positionMarker = document.getElementById('partial-new-comment-form-actions');
   if (positionMarker) {
     minAjax({
-      url: `${URL}note/${userId}`, // request URL
+      url: `${URL}${VERSION}/note/${userId}`, // request URL
       type: 'GET', // Request type GET/POST
-      success(data) {
+      success(results) {
         // Retrieve all the notes based on issue id
-        allNotes = JSON.parse(data);
+        const formattedResults = JSON.parse(results);
+        allNotes = formattedResults.data;
         // Add the private note add button
         positionMarker.prepend(createPrivateNoteAddButton());
         // Retrieve all the comments and append notes
-        const commentBoxes = document.querySelectorAll('.js-comment-container');
-        commentBoxes.forEach((commentBox, index) => {
-          const commentBoxId = commentBox.querySelector('.timeline-comment-group');
-          if (commentBoxId) {
-            const commentId = commentBoxId.id.split('-').pop();
-            const findNotesNearestToComment = obj => obj.nearestCommentId === commentId;
-            const notesNearestToCommentBox = allNotes.filter(findNotesNearestToComment);
-            notesNearestToCommentBox.reverse().forEach(element => {
-              commentBox.after(createNoteBox(element));
-            });
-          }
-        });
+        if (allNotes.length) {
+          const commentBoxes = document.querySelectorAll('.js-comment-container');
+          commentBoxes.forEach(commentBox => {
+            const commentBoxId = commentBox.querySelector('.timeline-comment-group');
+            if (commentBoxId) {
+              const commentId = commentBoxId.id.split('-').pop();
+
+              const findNotesNearestToComment = obj => obj.nearestCommentId === commentId;
+              const notesNearestToCommentBox = allNotes.filter(findNotesNearestToComment);
+              notesNearestToCommentBox.reverse().forEach(element => {
+                commentBox.after(createNoteBox(element));
+              });
+            }
+          });
+        }
       },
     });
   } else {
