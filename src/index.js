@@ -3,12 +3,12 @@ import createNoteBox from './noteBox';
 import minAjax from './ajax';
 import { URL } from './constants';
 import './style.css';
-
+// Retrieve user id from session
 const userId = '5d4145e999c6db6b9d23380b';
-let note = null;
+let note = '';
 let allNotes = [];
-
 let nearest_comment_id = null;
+
 // Check the url is issue or pull
 const currentUrl = document.location.toString().toLowerCase();
 const urlParams = currentUrl.split('/');
@@ -16,16 +16,15 @@ const issue_id = urlParams[urlParams.length - 1];
 const note_type = currentUrl.includes('issue') ? 'issue' : 'pull';
 
 // Disable/Enable Add private button based on value entered
-
 function onInputValueChange(e) {
   const addPrivateNoteButton = document.getElementById('add_private_note_button');
 
   note = e.target.value;
 
   if (e.target.value.length > 0) {
-    // addPrivateNoteButton.disabled = false;
+    addPrivateNoteButton.disabled = false;
   } else {
-    // addPrivateNoteButton.disabled = true;
+    addPrivateNoteButton.disabled = true;
   }
 }
 
@@ -49,19 +48,15 @@ function createPrivateNoteAddButton() {
   button.type = 'button';
   button.classList.add('btn');
   button.classList.add('btn-primary');
-  // button.disabled = true;
+  button.disabled = true;
   button.onclick = e => {
-    // button.disabled = true;
+    button.disabled = true;
+    const textArea = document.getElementById('new_comment_field');
     const commentBoxes = document.querySelectorAll('.js-comment-container:not(.private-note)');
     const commentBoxCount = commentBoxes.length;
-    console.log('commentBoxes', commentBoxes);
-
     // Find nearest comment id
     const nearestBox = commentBoxes[commentBoxCount - 2].querySelector('.js-comment-container [id]').id;
     nearest_comment_id = nearestBox.split('-').pop();
-    console.log('Issue Id', issue_id);
-    console.log('Comment Id', nearest_comment_id);
-
     minAjax({
       url: `${URL}note`, // request URL
       type: 'POST', // Request type GET/POST
@@ -73,7 +68,16 @@ function createPrivateNoteAddButton() {
         nearest_comment_id,
         nearest_created_date: new Date(),
       },
-      success(data) {},
+      success(data) {
+        allNotes.push(JSON.parse(data));
+        const commentBoxes = document.querySelectorAll('.js-comment-container');
+        const commentBoxCount = commentBoxes.length;
+
+        const nearestBox = commentBoxes[commentBoxCount - 2];
+
+        nearestBox.after(createNoteBox(data._id, allNotes[allNotes.length - 1]));
+        textArea.value = '';
+      },
     });
   };
   return button;
@@ -87,30 +91,25 @@ function init() {
       url: `${URL}note/${userId}`, // request URL
       type: 'GET', // Request type GET/POST
       success(data) {
+        // Retrieve all the notes based on issue id
         allNotes = JSON.parse(data);
+        // Add the private note add button
         positionMarker.prepend(createPrivateNoteAddButton());
-        // console.log('All Notes ... -->', allNotes);
+        // Retrieve all the comments and append notes
         const commentBoxes = document.querySelectorAll('.js-comment-container');
         commentBoxes.forEach((commentBox, index) => {
           const commentBoxId = commentBox.querySelector('.timeline-comment-group');
           if (commentBoxId) {
             const commentId = commentBoxId.id.split('-').pop();
-
-            const checkComment = obj => {
+            const findNotesNearestToComment = obj => {
               return obj.nearest_comment_id === commentId;
             };
-            const checkCommentExist = allNotes.filter(checkComment);
-            console.log('checkCommentExist', checkCommentExist);
+            const notesNearestToCommentBox = allNotes.filter(findNotesNearestToComment);
 
-            checkCommentExist.reverse().forEach(element => {
+            notesNearestToCommentBox.reverse().forEach(element => {
               commentBox.after(createNoteBox(index, element));
             });
           }
-
-          // document.getElementById(`comment-box-${index}`).addEventListener('click', e => {
-          // delete functionality of comment boxes
-          //   console.log(index);
-          // });
         });
       },
     });
@@ -121,4 +120,3 @@ function init() {
 window.onload = () => {
   init();
 };
-// loadAllTheNotes();
