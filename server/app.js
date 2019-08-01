@@ -1,12 +1,12 @@
 import express from 'express';
 import cors from 'cors';
-import env from 'dotenv';
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
 import { json, urlencoded } from 'body-parser';
 import routes from './routes';
 
-env.config();
+dotenv.config();
 
 function connect() {
   const options = {
