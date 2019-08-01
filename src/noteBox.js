@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 function createCommentBox(noteDetail, userName) {
   const wrapper = document.createElement('div');
-  wrapper.classList = ['timeline-comment-group js-minimizable-comment-group js-targetable-comment'];
+  wrapper.classList = ['timeline-comment-group js-minimizable-comment-group js-targetable-comment '];
   const content = document.createElement('div');
   content.classList = [
     'unminimized-comment comment previewable-edit js-task-list-container editable-comment js-comment timeline-comment reorderable-task-lists current-user',
@@ -86,7 +86,8 @@ function createAvatar(userName, userId, avatarUrl) {
 export default function createNoteBox(noteDetail, userDetail) {
   const noteNode = document.createElement('div');
   noteNode.classList = ['timeline-comment-wrapper js-comment-container private-note'];
-  noteNode.appendChild(createAvatar(userDetail.userName, userDetail.userId, userDetail.avatarUrl));
-  noteNode.appendChild(createCommentBox(noteDetail, userDetail.userName));
+  noteNode.setAttribute('private-id', noteDetail._id);
+  noteNode.appendChild(createAvatar());
+  noteNode.appendChild(createCommentBox(noteDetail));
   return noteNode;
 }

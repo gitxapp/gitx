@@ -1,4 +1,5 @@
 import Note from './note.model';
+import mongoose from 'mongoose';
 
 async function createNote(noteDetails) {
   const { userId } = noteDetails;
@@ -28,7 +29,7 @@ async function createNote(noteDetails) {
 
 async function getNotes(userId, issueId) {
   try {
-    const notes = await Note.find({ $and: { userId, issueId } }).populate('userId', 'userName avatarUrl githubId');
+    const notes = await Note.find({ $and: [{ userId }, { issueId }] }).populate('userId', 'userName avatarUrl githubId');
     return {
       status: 200,
       message: 'Fetched notes',
@@ -43,7 +44,31 @@ async function getNotes(userId, issueId) {
   }
 }
 
+async function deleteNote(noteId) {
+  if (!noteId) {
+    return {
+      status: 400,
+      message: 'Note id is required',
+    };
+  }
+  try {
+    const note = await Note.findOne({ _id: mongoose.Types.ObjectId(noteId) }).populate('userId', 'userName avatarUrl githubId');
+    if (note) note.remove();
+    return {
+      status: 200,
+      data: note,
+      message: 'Note removed successfully',
+    };
+  } catch (err) {
+    return {
+      status: 401,
+      data: { error: err },
+      message: 'Invalid note id',
+    };
+  }
+}
 export default {
   createNote,
   getNotes,
+  deleteNote,
 };
