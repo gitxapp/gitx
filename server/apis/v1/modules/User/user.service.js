@@ -24,6 +24,32 @@ async function createUser(userDetails) {
   }
 }
 
+async function createOrUpdate(userDetails) {
+  if (!userDetails.email) {
+    return {
+      status: 401,
+      message: 'Email not found',
+    };
+  }
+  try {
+    await User.update({ email: userDetails.email }, userDetails, { upsert: true });
+    if (user) {
+      return {
+        data: userDetails,
+        status: 200,
+        message: 'Logged in',
+      };
+    }
+  } catch (err) {
+    return {
+      status: 500,
+      message: 'User not created',
+      data: { error: err },
+    };
+  }
+}
+
 export default {
   createUser,
+  createOrUpdate,
 };

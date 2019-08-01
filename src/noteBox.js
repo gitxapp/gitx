@@ -1,4 +1,5 @@
-function createCommentBox(noteDetail) {
+/* eslint-disable no-underscore-dangle */
+function createCommentBox(noteDetail, userName) {
   const wrapper = document.createElement('div');
   wrapper.classList = ['timeline-comment-group js-minimizable-comment-group js-targetable-comment'];
   const content = document.createElement('div');
@@ -30,12 +31,8 @@ function createCommentBox(noteDetail) {
   timelineWrapper.append(timeLineAction);
   const timelineH3 = document.createElement('h3');
   timelineH3.classList = ['timeline-comment-header-text f5 text-normal'];
-  timelineH3.innerHTML = '<strong class="css-truncate expandable"><a class="author text-inherit css-truncate-target">karthikvillanchira</a></strong>';
+  timelineH3.innerHTML = `<strong class="css-truncate expandable"><a class="author text-inherit css-truncate-target">${userName}</a></strong>`;
   timelineWrapper.append(timelineH3);
-
-  // wip
-  // const actions = document.createElement('div');
-  // actions.classList = ['timeline-comment-actions js-timeline-comment-actions'];
 
   content.append(timelineWrapper);
   const commentBodyWrapper = document.createElement('div');
@@ -61,16 +58,16 @@ function createCommentBox(noteDetail) {
   return wrapper;
 }
 
-function createAvatar() {
+function createAvatar(userName, userId, avatarUrl) {
   const avatarWrapper = document.createElement('div');
   avatarWrapper.classList = ['avatar-parent-child timeline-comment-avatar'];
 
   // a tag
   const avatarA = document.createElement('a');
-  avatarA.href = 'www.google.com'; // change this
+  avatarA.href = `/${userName}`;
   avatarA.classList = ['d-inline-block'];
   avatarA.setAttribute('data-hovercard-type', 'user');
-  avatarA.setAttribute('data-hovercard-url', '/hovercards?user_id=22343433'); // change this
+  avatarA.setAttribute('data-hovercard-url', `/hovercards?user_id=${userId}`);
   avatarA.setAttribute('data-octo-click', 'hovercard-link-click');
   avatarA.setAttribute('data-octo-dimensions', 'link_type:self');
 
@@ -79,17 +76,17 @@ function createAvatar() {
   avatarImg.classList = ['avatar rounded-1'];
   avatarImg.height = '44';
   avatarImg.width = '44';
-  avatarImg.alt = '@karthikvillanchira'; // change this
-  avatarImg.src = 'https://avatars1.githubusercontent.com/u/22343433?s=180&v=4'; // chnage this
+  avatarImg.alt = `@${userName}`;
+  avatarImg.src = `${avatarUrl}?s=180`;
   avatarA.appendChild(avatarImg);
   avatarWrapper.appendChild(avatarA);
   return avatarWrapper;
 }
 
-export default function createNoteBox(noteDetail) {
+export default function createNoteBox(noteDetail, userDetail) {
   const noteNode = document.createElement('div');
   noteNode.classList = ['timeline-comment-wrapper js-comment-container private-note'];
-  noteNode.appendChild(createAvatar());
-  noteNode.appendChild(createCommentBox(noteDetail));
+  noteNode.appendChild(createAvatar(userDetail.userName, userDetail.userId, userDetail.avatarUrl));
+  noteNode.appendChild(createCommentBox(noteDetail, userDetail.userName));
   return noteNode;
 }

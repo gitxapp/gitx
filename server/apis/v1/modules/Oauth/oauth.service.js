@@ -1,14 +1,13 @@
 import axios from 'axios';
 import UserService from '../User/user.service';
 
-const clientID = '532649fddafad8da7008';
-const clientSecret = '82f104495fd89ffa6fc94e301114648bd9f4d07c';
-
 async function authRedirectService(requestToken) {
   try {
     const accessTokenResponse = await axios({
       method: 'post',
-      url: `https://github.com/login/oauth/access_token?client_id=${clientID}&client_secret=${clientSecret}&code=${requestToken}`,
+      url: `https://github.com/login/oauth/access_token?client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${
+        process.env.GITHUB_CLIENT_SECRET
+      }&code=${requestToken}`,
       headers: {
         accept: 'application/json',
       },
@@ -23,16 +22,8 @@ async function authRedirectService(requestToken) {
         Authorization: `token ${accessToken}`,
       },
     });
-    const {
-      user_name: userName,
-      avatar_url: avatarUrl,
-      email_id: email,
-      bio,
-      company,
-      location,
-      github_id: githubId,
-    } = userDetailsResponse.data;
-    await UserService.createUser({
+    const { login: userName, avatar_url: avatarUrl, email, bio, company, location, id: githubId } = userDetailsResponse.data;
+    await UserService.createOrUpdate({
       userName,
       githubId,
       email,
@@ -45,7 +36,7 @@ async function authRedirectService(requestToken) {
     });
     return {
       status: 200,
-      message: 'User created',
+      message: 'User logged in',
       data: {
         accessToken,
         userName,

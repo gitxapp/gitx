@@ -1,5 +1,6 @@
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = {
   watch: true,
@@ -11,7 +12,7 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
+        exclude: [/node_modules/],
         use: {
           loader: 'babel-loader',
         },
@@ -32,12 +33,11 @@ module.exports = {
     ],
   },
   plugins: [
+    new webpack.IgnorePlugin(/^\.\/config/),
     new HtmlWebPackPlugin({
       template: './src/index.html',
       filename: './index.html',
     }),
-    new CopyWebpackPlugin([
-      { from: 'manifest.json' },
-    ]),
+    new CopyWebpackPlugin([{ from: 'manifest.json' }, { from: 'src/background.js' }]),
   ],
 };

@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // Could break if GitHub changes its markup
 import createNoteBox from './noteBox';
 import minAjax from './ajax';
@@ -46,7 +47,7 @@ function createPrivateNoteAddButton() {
   button.classList.add('btn');
   button.classList.add('btn-primary');
   button.disabled = true;
-  button.onclick = e => {
+  button.onclick = () => {
     button.disabled = true;
     const textArea = document.getElementById('new_comment_field');
     let commentBoxes = document.querySelectorAll('.js-comment-container:not(.private-note)');

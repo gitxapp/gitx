@@ -14,5 +14,11 @@
       "matches": ["https://github.com/", "https://github.com/*/issues/*"],
       "js": ["main.js"]
     }
+  ],
+  "background": [
+    {
+      "scripts": ["background.js"],
+      "persistent": true
+    }
   ]
 }
