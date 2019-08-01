@@ -1,10 +1,12 @@
 import express from 'express';
 import cors from 'cors';
+import env from 'dotenv';
 import mongoose from 'mongoose';
 
 import { json, urlencoded } from 'body-parser';
-import { mongoURI } from './config/keys';
 import routes from './routes';
+
+env.config();
 
 function connect() {
   const options = {
@@ -12,7 +14,7 @@ function connect() {
     useCreateIndex: true,
     useNewUrlParser: true,
   };
-  mongoose.connect(mongoURI, options);
+  mongoose.connect(process.env.DB_URI, options);
 }
 connect();
 mongoose.connection.on('connected', () => console.log('Connected to MongoDB'));

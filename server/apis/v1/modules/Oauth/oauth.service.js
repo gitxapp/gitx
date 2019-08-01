@@ -23,6 +23,9 @@ async function authRedirectService(requestToken) {
         Authorization: `token ${accessToken}`,
       },
     });
+    // eslint-disable-next-line max-len
+    // eslint-disable-next-line object-curly-newline
+    // eslint-disable-next-line max-len
     const { user_name: userName, avatar_url: avatarUrl, email_id: email, bio, company, location, github_id: githubId } = userDetailsResponse.data;
     await UserService.createUser({
       userName,
