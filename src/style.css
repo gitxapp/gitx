@@ -1,9 +1,29 @@
 .pvt-note-label {
-    float: left;
-    background-color: #2cbe4e;
-    color: white;
-    float: left;
-    border-radius: 3px;
-    padding: 4px 8px;
-    text-align: center;
+  float: left;
+  background-color: #2cbe4e;
+  color: white;
+  float: left;
+  border-radius: 3px;
+  padding: 4px 8px;
+  text-align: center;
+}
+
+.private-note-status {
+  background-color: rgb(250, 250, 250);
+  bottom: 3em;
+  font-size: 13px;
+  display: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(221, 221, 221);
+  border-image: initial;
+  border-radius: 2px;
+  position: fixed;
+  z-index: 9999;
+  right: 3em;
+  color: rgb(136, 136, 136);
+  bottom: 1em;
+  display: inline-block;
+  font-size: 11px;
+  padding: 0.5em;
 }

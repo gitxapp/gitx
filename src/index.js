@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 // Could break if GitHub changes its markup
+import Cookie from 'js-cookie';
 import createNoteBox from './noteBox';
+import createFooter from './footer';
 import minAjax from './ajax';
 import { URL, VERSION } from './constants';
 import './style.css';
@@ -143,5 +145,10 @@ function init() {
   }
 }
 window.onload = () => {
-  init();
+  const authToken = Cookie.get('privateCommentAuth');
+  if (!authToken) {
+    createFooter();
+  } else {
+    init();
+  }
 };
