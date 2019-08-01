@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { connect as _connect, connection } from 'mongoose';
+import mongoose from 'mongoose';
 
 import { json, urlencoded } from 'body-parser';
 import { mongoURI } from './config/keys';
@@ -11,18 +11,18 @@ function connect() {
     useCreateIndex: true,
     useNewUrlParser: true,
   };
-  _connect(mongoURI, options);
+  mongoose.connect(mongoURI, options);
 }
 connect();
-connection.on('connected', () => console.log('Connected to MongoDB'));
-connection.on('error', err => console.log(err));
-connection.on('disconnected', connect);
+mongoose.connection.on('connected', () => console.log('Connected to MongoDB'));
+mongoose.connection.on('error', err => console.log(err));
+mongoose.connection.on('disconnected', connect);
 
 // Initialize Redis
 // require("./services/cache");
 const app = express();
 
-// app.use(static(`${__dirname}/public`));
+app.use(express.static(`${__dirname}/public`));
 
 app.use(json());
 app.use(urlencoded({ extended: true }));
@@ -34,7 +34,7 @@ app.use(
   }),
 );
 // API Routes
-app.use('/api', require('./routes/index'));
+app.use('/api', require('./routes/index').default);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

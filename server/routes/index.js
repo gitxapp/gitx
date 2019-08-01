@@ -1,8 +1,11 @@
-'use strict';
-const express = require('express');
-const router = express.Router();
-router.use('/user', require('./user'));
-router.use('/oauth', require('./oauth'));
-router.use('/note', require('./note'));
+import { Router } from 'express';
+import UserRoutes from './user.routes';
+import NoteRoutes from './note.routes';
+import OauthRoutes from './oauth.routes';
 
-module.exports = router;
+const router = Router();
+router.use('/user', UserRoutes);
+router.use('/oauth', OauthRoutes);
+router.use('/note', NoteRoutes);
+
+export default router;
