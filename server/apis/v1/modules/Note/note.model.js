@@ -11,8 +11,8 @@ const noteSchema = new Schema(
       type: String,
       required: true,
     }, // issue or pull id
-    nearestComment_id: String,
-    nearestCreated_date: { type: Date },
+    nearestCommentId: String,
+    nearestCreatedDate: { type: Date },
     isActive: { type: Boolean, default: true },
   },
   { timestamps: true },
