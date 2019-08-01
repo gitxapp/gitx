@@ -7,21 +7,13 @@ import './style.css';
 const userId = '5d4145e999c6db6b9d23380b';
 let note = null;
 let allNotes = [];
-let note_type = null;
 
-let issue_id = null;
 let nearest_comment_id = null;
-let nearest_created_date = null;
+// Check the url is issue or pull
 const currentUrl = document.location.toString().toLowerCase();
 const urlParams = currentUrl.split('/');
-// Check the url is issue or pull
-if (currentUrl.includes('issue')) {
-  issue_id = urlParams[urlParams.length - 1];
-  note_type = 'issue';
-} else {
-  note_type = 'pull';
-  issue_id = urlParams[urlParams.length - 1];
-}
+const issue_id = urlParams[urlParams.length - 1];
+const note_type = currentUrl.includes('issue') ? 'issue' : 'pull';
 
 // Disable/Enable Add private button based on value entered
 
@@ -60,10 +52,9 @@ function createPrivateNoteAddButton() {
   // button.disabled = true;
   button.onclick = e => {
     // button.disabled = true;
-    const commentBoxes = document.querySelectorAll('.js-comment-container');
+    const commentBoxes = document.querySelectorAll('.js-comment-container:not(.private-note)');
     const commentBoxCount = commentBoxes.length;
-    // Find nearest comment date
-    // nearest_created_date = commentBoxes[commentBoxCount - 2].querySelector('relative-time[datetime]').getAttribute('datetime');
+    console.log('commentBoxes', commentBoxes);
 
     // Find nearest comment id
     const nearestBox = commentBoxes[commentBoxCount - 2].querySelector('.js-comment-container [id]').id;
@@ -71,19 +62,19 @@ function createPrivateNoteAddButton() {
     console.log('Issue Id', issue_id);
     console.log('Comment Id', nearest_comment_id);
 
-    // minAjax({
-    //   url: `${URL}note`, // request URL
-    //   type: 'POST', // Request type GET/POST
-    //   data: {
-    //     user_id: userId,
-    //     note_content: note,
-    //     type: note_type,
-    //     issue_id,
-    //     nearest_comment_id,
-    //     nearest_created_date: new Date(),
-    //   },
-    //   success(data) {},
-    // });
+    minAjax({
+      url: `${URL}note`, // request URL
+      type: 'POST', // Request type GET/POST
+      data: {
+        user_id: userId,
+        note_content: note,
+        type: note_type,
+        issue_id,
+        nearest_comment_id,
+        nearest_created_date: new Date(),
+      },
+      success(data) {},
+    });
   };
   return button;
 }
@@ -98,22 +89,20 @@ function init() {
       success(data) {
         allNotes = JSON.parse(data);
         positionMarker.prepend(createPrivateNoteAddButton());
-        console.log('All Notes ... -->', allNotes);
+        // console.log('All Notes ... -->', allNotes);
         const commentBoxes = document.querySelectorAll('.js-comment-container');
         commentBoxes.forEach((commentBox, index) => {
           const commentBoxId = commentBox.querySelector('.timeline-comment-group');
           if (commentBoxId) {
-            // const commentBoxTime = commentBox.querySelector('relative-time[datetime]')
-            //   ? commentBox.querySelector('relative-time[datetime]').getAttribute('datetime')
-            //   : null;
-
             const commentId = commentBoxId.id.split('-').pop();
 
             const checkComment = obj => {
               return obj.nearest_comment_id === commentId;
             };
             const checkCommentExist = allNotes.filter(checkComment);
-            checkCommentExist.forEach(element => {
+            console.log('checkCommentExist', checkCommentExist);
+
+            checkCommentExist.reverse().forEach(element => {
               commentBox.after(createNoteBox(index, element));
             });
           }

@@ -1,4 +1,4 @@
-function createCommentBox(index) {
+function createCommentBox(index, noteDetails) {
   const wrapper = document.createElement('div');
   wrapper.classList = ['timeline-comment-group js-minimizable-comment-group js-targetable-comment'];
   const content = document.createElement('div');
@@ -50,7 +50,7 @@ function createCommentBox(index) {
   tr.classList = ['d-block'];
   const td = document.createElement('td');
   td.classList = ['d-block comment-body markdown-body  js-comment-body'];
-  td.innerHTML = '<p>settings</p>';
+  td.innerHTML = `<p>${noteDetails.note_content}</p>`;
   tr.appendChild(td);
   tbody.appendChild(tr);
   table.appendChild(tbody);
@@ -86,14 +86,13 @@ function createAvatar() {
   return avatarWrapper;
 }
 
-
-export default function createNoteBox(index) {
+export default function createNoteBox(index, noteDetails) {
   // const commentBody = document.querySelector('#discussion_bucket > div.col-9 > div > div.js-discussion.js-socket-channel');
   const note = document.createElement('div');
 
-  note.classList = ['timeline-comment-wrapper js-comment-container'];
+  note.classList = ['timeline-comment-wrapper js-comment-container private-note'];
   note.appendChild(createAvatar());
-  note.appendChild(createCommentBox(index));
+  note.appendChild(createCommentBox(index, noteDetails));
   // note.innerHTML = '<p>sssp</p>'
   return note;
   // document
