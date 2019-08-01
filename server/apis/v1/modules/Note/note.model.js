@@ -6,7 +6,7 @@ const noteSchema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User' },
     noteContent: String,
-    type: String, // pull or issue
+    noteType: String, // pull or issue
     issueId: {
       type: String,
       required: true,

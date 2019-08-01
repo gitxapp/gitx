@@ -1,4 +1,4 @@
-function createCommentBox(index, noteDetails) {
+function createCommentBox(noteDetail) {
   const wrapper = document.createElement('div');
   wrapper.classList = ['timeline-comment-group js-minimizable-comment-group js-targetable-comment'];
   const content = document.createElement('div');
@@ -22,7 +22,7 @@ function createCommentBox(index, noteDetails) {
     <svg aria-label="Show options" class="octicon octicon-kebab-horizontal" viewBox="0 0 13 16" version="1.1" width="13" height="16" role="img"><path fill-rule="evenodd" d="M1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm5 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM13 7.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"></path></svg>
     </summary>
     <details-menu class="dropdown-menu dropdown-menu-sw show-more-popover text-gray-dark anim-scale-in" style="width:185px" role="menu">
-      <button type="button" id="comment-box-${index}" class="dropdown-item menu-item-danger btn-link" aria-label="Delete comment">
+      <button type="button" id="comment-box-${noteDetail._id}" class="dropdown-item menu-item-danger btn-link" aria-label="Delete comment">
         Delete
       </button>
     </details-menu>`;
@@ -50,7 +50,7 @@ function createCommentBox(index, noteDetails) {
   tr.classList = ['d-block'];
   const td = document.createElement('td');
   td.classList = ['d-block comment-body markdown-body  js-comment-body'];
-  td.innerHTML = `<p>${noteDetails.note_content}</p>`;
+  td.innerHTML = `<p>${noteDetail.noteContent}</p>`;
   tr.appendChild(td);
   tbody.appendChild(tr);
   table.appendChild(tbody);
@@ -86,16 +86,10 @@ function createAvatar() {
   return avatarWrapper;
 }
 
-export default function createNoteBox(index, noteDetails) {
-  // const commentBody = document.querySelector('#discussion_bucket > div.col-9 > div > div.js-discussion.js-socket-channel');
-  const note = document.createElement('div');
-
-  note.classList = ['timeline-comment-wrapper js-comment-container private-note'];
-  note.appendChild(createAvatar());
-  note.appendChild(createCommentBox(index, noteDetails));
-  // note.innerHTML = '<p>sssp</p>'
-  return note;
-  // document
-  //   .querySelector(`#discussion_bucket > div.col-9 > div > div.js-discussion.js-socket-channel > div:nth-child(${commentBody.children.length - 1})`)
-  //   .after(note);
+export default function createNoteBox(noteDetail) {
+  const noteNode = document.createElement('div');
+  noteNode.classList = ['timeline-comment-wrapper js-comment-container private-note'];
+  noteNode.appendChild(createAvatar());
+  noteNode.appendChild(createCommentBox(noteDetail));
+  return noteNode;
 }
