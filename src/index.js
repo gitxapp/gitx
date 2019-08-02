@@ -3,11 +3,10 @@
 import Cookie from 'js-cookie';
 import createNoteBox from './noteBox';
 import createFooter from './footer';
-import minAjax from './ajax';
-import { URL, VERSION } from './constants';
+import { getAllNotes, removeNote, createNote } from './api';
 import './style.css';
 // Retrieve user id from session
-const userId = '5d42b6989e03e3b25c0c73e9';
+const userId = '5d43c19fdfe146fa6a9a905b';
 let noteContent = '';
 let allNotes = [];
 let nearestCommentId = null;
@@ -42,21 +41,23 @@ function initInputArea() {
   }
 }
 
-function deleteNote(noteId) {
-  console.log('deleteNote', noteId);
-  minAjax({
-    url: `${URL}${VERSION}/note/delete/${noteId}`, // request URL
-    type: 'POST', // Request type GET/POST
-    success() {
-      const commentBoxes = document.querySelectorAll('.private-note');
-      commentBoxes.forEach(commentBox => {
-        const commentBoxPrivateId = commentBox.getAttribute('private-id');
-        if (commentBoxPrivateId === noteId) {
-          commentBox.remove();
-        }
-      });
-    },
-  });
+async function deleteNote(noteId) {
+  try {
+    await removeNote({
+      noteId,
+    });
+
+    // Remove deleted note from node
+    const commentBoxes = document.querySelectorAll('.private-note');
+    commentBoxes.forEach(commentBox => {
+      const commentBoxPrivateId = commentBox.getAttribute('private-id');
+      if (commentBoxPrivateId === noteId) {
+        commentBox.remove();
+      }
+    });
+  } catch (error) {
+    console.log('error', error);
+  }
 }
 // Create add private note  button
 function createPrivateNoteAddButton() {
@@ -67,7 +68,7 @@ function createPrivateNoteAddButton() {
   button.classList.add('btn');
   button.classList.add('btn-primary');
   button.disabled = true;
-  button.onclick = () => {
+  button.onclick = async () => {
     button.disabled = true;
     const textArea = document.getElementById('new_comment_field');
     let commentBoxes = document.querySelectorAll('.js-comment-container:not(.private-note)');
@@ -75,80 +76,77 @@ function createPrivateNoteAddButton() {
     // Find nearest comment id
     let nearestBox = commentBoxes[commentBoxCount - 2].querySelector('.js-comment-container [id]').id;
     nearestCommentId = nearestBox.split('-').pop();
-    minAjax({
-      url: `${URL}${VERSION}/note`, // request URL
-      type: 'POST', // Request type GET/POST
-      data: {
+    try {
+      const newlyCreatedNote = await createNote({
         userId,
         noteContent,
         noteType,
         issueId,
         nearestCommentId,
-      },
-      success(result) {
-        const formattedResult = JSON.parse(result);
+      });
 
-        const newlyCreatedNote = formattedResult.data;
-
-        allNotes.push(newlyCreatedNote);
-        commentBoxes = document.querySelectorAll('.js-comment-container');
-        commentBoxCount = commentBoxes.length;
-        nearestBox = commentBoxes[commentBoxCount - 2];
-        // eslint-disable-next-line no-underscore-dangle
-        nearestBox.after(createNoteBox(allNotes[allNotes.length - 1]));
-        textArea.value = '';
-      },
-    });
+      allNotes.push(newlyCreatedNote);
+      commentBoxes = document.querySelectorAll('.js-comment-container');
+      commentBoxCount = commentBoxes.length;
+      nearestBox = commentBoxes[commentBoxCount - 2];
+      // eslint-disable-next-line no-underscore-dangle
+      nearestBox.after(createNoteBox(allNotes[allNotes.length - 1]));
+      textArea.value = '';
+    } catch (error) {
+      console.log('error', error);
+    }
   };
   return button;
 }
 
-function init() {
+async function init() {
   initInputArea();
   const positionMarker = document.getElementById('partial-new-comment-form-actions');
   if (positionMarker) {
-    minAjax({
-      url: `${URL}${VERSION}/note/${userId}/issue/${issueId}`, // request URL
-      type: 'GET', // Request type GET/POST
-      success(results) {
-        // Retrieve all the notes based on issue id
-        const formattedResults = JSON.parse(results);
-        allNotes = formattedResults.data;
-        // Add the private note add button
-        positionMarker.prepend(createPrivateNoteAddButton());
-        // Retrieve all the comments and append notes
-        if (allNotes.length) {
-          const commentBoxes = document.querySelectorAll('.js-comment-container');
-          commentBoxes.forEach(commentBox => {
-            const commentBoxId = commentBox.querySelector('.timeline-comment-group');
-            if (commentBoxId) {
-              const commentId = commentBoxId.id.split('-').pop();
+    try {
+      // Load all the notes based on issue id
+      allNotes = await getAllNotes({
+        userId,
+        issueId,
+      });
 
-              const findNotesNearestToComment = obj => obj.nearestCommentId === commentId;
-              const notesNearestToCommentBox = allNotes.filter(findNotesNearestToComment);
-              notesNearestToCommentBox.reverse().forEach(element => {
-                commentBox.after(createNoteBox(element));
-                if (commentBox) {
-                  document.getElementById(`comment-box-${element._id}`).addEventListener('click', e => {
-                    console.log('deleteNote', element);
-                    deleteNote(element._id);
-                  });
-                }
-              });
-            }
-          });
-        }
-      },
-    });
+      positionMarker.prepend(createPrivateNoteAddButton());
+      if (allNotes.length) {
+        // Iterate all the comments and append notes
+        const commentBoxes = document.querySelectorAll('.js-comment-container');
+        commentBoxes.forEach(commentBox => {
+          const commentBoxId = commentBox.querySelector('.timeline-comment-group');
+          if (commentBoxId) {
+            const commentId = commentBoxId.id.split('-').pop();
+
+            const findNotesNearestToComment = obj => obj.nearestCommentId === commentId;
+            const notesNearestToCommentBox = allNotes.filter(findNotesNearestToComment);
+            notesNearestToCommentBox.reverse().forEach(element => {
+              commentBox.after(createNoteBox(element));
+              if (commentBox) {
+                document.getElementById(`comment-box-${element._id}`).addEventListener('click', e => {
+                  console.log('deleteNote', element);
+                  deleteNote(element._id);
+                });
+              }
+            });
+          }
+        });
+      }
+    } catch (error) {
+      console.log('error', error);
+    }
   } else {
     console.log('Extension: position marker not found.');
   }
 }
 window.onload = () => {
-  const authToken = Cookie.get('privateCommentAuth');
-  if (!authToken) {
-    createFooter();
-  } else {
-    init();
-  }
+  const authToken = Cookie.get('private-user-token');
+  console.log('authToken-->', authToken);
+  init();
+  // if (!authToken) {
+  //   createFooter();
+  // } else {
+  //   init();
+  // }
 };
