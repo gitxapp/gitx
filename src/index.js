@@ -146,6 +146,7 @@ async function init() {
 window.onload = () => {
   window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
     const authToken = result.githubPrivateCommentToken;
+
     if (!authToken) {
       createFooter();
     } else {

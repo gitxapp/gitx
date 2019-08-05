@@ -7,6 +7,7 @@ import ejs from 'ejs';
 
 import { json, urlencoded } from 'body-parser';
 import routes from './routes';
+import validateRequest from './middlewares/validateRequest';
 
 dotenv.config();
 
@@ -41,6 +42,10 @@ app.use(
     credentials: true,
   }),
 );
+
+// eslint-disable-next-line global-require
+app.all('/api/*', validateRequest);
+
 // API Routes
 app.use('/api/v1', routes);
 
