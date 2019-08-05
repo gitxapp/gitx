@@ -16,10 +16,6 @@ const urlParams = currentUrl.split('/');
 const issueId = urlParams[urlParams.length - 1];
 const noteType = currentUrl.includes('issue') ? 'issue' : 'pull';
 
-function hasClass(element, className) {
-  return ` ${element.className} `.indexOf(` ${className} `) > -1;
-}
-
 // Disable/Enable Add private button based on value entered
 function onInputValueChange(e) {
   const addPrivateNoteButton = document.getElementById('add_private_note_button');
