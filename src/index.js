@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 // Could break if GitHub changes its markup
-import Cookie from 'js-cookie';
 import createNoteBox from './noteBox';
 import createFooter from './footer';
 import { getAllNotes, removeNote, createNote } from './api';
@@ -17,14 +16,22 @@ const urlParams = currentUrl.split('/');
 const issueId = urlParams[urlParams.length - 1];
 const noteType = currentUrl.includes('issue') ? 'issue' : 'pull';
 
+function hasClass(element, className) {
+  return ` ${element.className} `.indexOf(` ${className} `) > -1;
+}
+
 // Disable/Enable Add private button based on value entered
 function onInputValueChange(e) {
   const addPrivateNoteButton = document.getElementById('add_private_note_button');
   noteContent = e.target.value;
-  if (e.target.value.length > 0 && addPrivateNoteButton) {
-    addPrivateNoteButton.disabled = false;
-  } else {
-    addPrivateNoteButton.disabled = true;
+  if (addPrivateNoteButton) {
+    if (e.target.value.indexOf('Uploading') !== -1) {
+      addPrivateNoteButton.disabled = true;
+    } else if (e.target.value.length > 0 && addPrivateNoteButton) {
+      addPrivateNoteButton.disabled = false;
+    } else {
+      addPrivateNoteButton.disabled = true;
+    }
   }
 }
 
@@ -61,13 +68,14 @@ async function deleteNote(noteId) {
 }
 // Create add private note  button
 function createPrivateNoteAddButton() {
+  const textArea = document.getElementById('new_comment_field');
   const button = document.createElement('button');
   button.textContent = 'Add private notes';
   button.id = 'add_private_note_button';
   button.type = 'button';
   button.classList.add('btn');
   button.classList.add('btn-primary');
-  button.disabled = true;
+  button.disabled = textArea && !textArea.value;
   button.onclick = async () => {
     button.disabled = true;
     const textArea = document.getElementById('new_comment_field');
@@ -109,7 +117,6 @@ async function init() {
     try {
       // Load all the notes based on issue id
       allNotes = await getAllNotes({
-        userId,
         issueId,
       });
 

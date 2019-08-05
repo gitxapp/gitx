@@ -56,7 +56,8 @@ function minAjax(config) {
       if (config.debugLog == true) console.log('SuccessResponse');
       if (config.debugLog == true) console.log(`Response Data:${xmlhttp.responseText}`);
     } else {
-      if (config.debugLog == true) console.log(`FailureResponse --> State:${xmlhttp.readyState}Status:${xmlhttp.status}`);
+      if (config.debugLog == true)
+        console.log(`FailureResponse --> State:${xmlhttp.readyState}Status:${xmlhttp.status}`);
 
       if (config.errorCallback) {
         console.log('Calling Error Callback');
@@ -73,7 +74,10 @@ function minAjax(config) {
       const datum = tmpArr[i].split('=');
       sendString.push(`${encodeURIComponent(datum[0])}=${encodeURIComponent(datum[1])}`);
     }
-  } else if (typeof sendData === 'object' && !(sendData instanceof String || (FormData && sendData instanceof FormData))) {
+  } else if (
+    typeof sendData === 'object' &&
+    !(sendData instanceof String || (FormData && sendData instanceof FormData))
+  ) {
     // eslint-disable-next-line no-restricted-syntax
     for (const k in sendData) {
       const datum = sendData[k];
@@ -90,6 +94,11 @@ function minAjax(config) {
 
   if (config.type === 'GET') {
     xmlhttp.open('GET', `${config.url}?${sendString}`, config.method);
+    if (config.headers && config.headers.length) {
+      config.headers.map(header => {
+        xmlhttp.setRequestHeader(header.type, header.value);
+      });
+    }
     xmlhttp.send();
 
     if (config.debugLog === true) console.log(`GET fired at:${config.url}?${sendString}`);
@@ -97,6 +106,11 @@ function minAjax(config) {
   if (config.type === 'POST') {
     xmlhttp.open('POST', config.url, config.method);
     xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    if (config.headers && config.headers.length) {
+      config.headers.map(header => {
+        xmlhttp.setRequestHeader(header.type, header.value);
+      });
+    }
     xmlhttp.send(sendString);
 
     if (config.debugLog === true) console.log(`POST fired at:${config.url} || Data:${sendString}`);

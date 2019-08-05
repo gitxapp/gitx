@@ -10,6 +10,7 @@ export default (req, res, next) => {
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_KEY);
       if (decoded) {
+        req.user = decoded;
         return next();
       }
       res.status(422).send({

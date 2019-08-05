@@ -1,6 +1,6 @@
 function openGithubLogin() {
   window.open(
-    'https://github.com/login/oauth/authorize?client_id=532649fddafad8da7008&redirect_uri=http://localhost:5000/api/v1/oauth/redirect',
+    'https://github.com/login/oauth/authorize?client_id=d349f2ece984aa05df0b&redirect_uri=http://localhost:5000/api/v1/oauth/redirect',
     '_blank',
   );
 }

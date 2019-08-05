@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import showdown from 'showdown';
 
 import Note from './note.model';
 
@@ -29,8 +30,15 @@ async function createNote(noteDetails) {
 }
 
 async function getNotes(userId, issueId) {
+  const converter = new showdown.Converter();
   try {
-    const notes = await Note.find({ $and: [{ userId }, { issueId }] }).populate('userId', 'userName avatarUrl githubId');
+    const notes = await Note.find({ $and: [{ userId }, { issueId }] }).populate(
+      'userId',
+      'userName avatarUrl githubId',
+    );
+    notes.forEach(note => {
+      note.noteContent = converter.makeHtml(note.noteContent);
+    });
     return {
       status: 200,
       message: 'Fetched notes',
@@ -45,7 +53,7 @@ async function getNotes(userId, issueId) {
   }
 }
 
-async function deleteNote(noteId) {
+async function deleteNote(userId, noteId) {
   if (!noteId) {
     return {
       status: 400,
@@ -53,7 +61,10 @@ async function deleteNote(noteId) {
     };
   }
   try {
-    const note = await Note.findOne({ _id: mongoose.Types.ObjectId(noteId) }).populate('userId', 'userName avatarUrl githubId');
+    const note = await Note.findOne({ _id: mongoose.Types.ObjectId(noteId), userId }).populate(
+      'userId',
+      'userName avatarUrl githubId',
+    );
     if (note) note.remove();
     return {
       status: 200,

@@ -59,6 +59,8 @@ async function createOrUpdate({
   };
   try {
     await User.update({ email }, userDetails, { upsert: true });
+    const updatedUser = await User.findOne({ email });
+    userDetails._id = updatedUser._id;
     userDetails.expiresIn = '7d';
     userDetails.token = jwt.sign(userDetails, process.env.JWT_KEY);
 
