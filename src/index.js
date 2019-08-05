@@ -74,7 +74,8 @@ function createPrivateNoteAddButton() {
     let commentBoxes = document.querySelectorAll('.js-comment-container:not(.private-note)');
     let commentBoxCount = commentBoxes.length;
     // Find nearest comment id
-    let nearestBox = commentBoxes[commentBoxCount - 2].querySelector('.js-comment-container [id]').id;
+    let nearestBox = commentBoxes[commentBoxCount - 2].querySelector('.js-comment-container [id]')
+      .id;
     nearestCommentId = nearestBox.split('-').pop();
     try {
       const newlyCreatedNote = await createNote({
@@ -126,10 +127,12 @@ async function init() {
             notesNearestToCommentBox.reverse().forEach(element => {
               commentBox.after(createNoteBox(element));
               if (commentBox) {
-                document.getElementById(`comment-box-${element._id}`).addEventListener('click', e => {
-                  console.log('deleteNote', element);
-                  deleteNote(element._id);
-                });
+                document
+                  .getElementById(`comment-box-${element._id}`)
+                  .addEventListener('click', e => {
+                    console.log('deleteNote', element);
+                    deleteNote(element._id);
+                  });
               }
             });
           }

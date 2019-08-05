@@ -5,9 +5,9 @@ async function authRedirectService(requestToken) {
   try {
     const accessTokenResponse = await axios({
       method: 'post',
-      url: `https://github.com/login/oauth/access_token?client_id=${process.env.GITHUB_CLIENT_ID}&client_secret=${
-        process.env.GITHUB_CLIENT_SECRET
-      }&code=${requestToken}`,
+      url: `https://github.com/login/oauth/access_token?client_id=${
+        process.env.GITHUB_CLIENT_ID
+      }&client_secret=${process.env.GITHUB_CLIENT_SECRET}&code=${requestToken}`,
       headers: {
         accept: 'application/json',
       },
@@ -31,8 +31,16 @@ async function authRedirectService(requestToken) {
         Authorization: `token ${accessToken}`,
       },
     });
-    const { login: userName, avatar_url: avatarUrl, email, bio, company, location, id: githubId } = userDetailsResponse.data;
-    await UserService.createOrUpdate({
+    const {
+      login: userName,
+      avatar_url: avatarUrl,
+      email,
+      bio,
+      company,
+      location,
+      id: githubId,
+    } = userDetailsResponse.data;
+    const response = await UserService.createOrUpdate({
       userName,
       githubId,
       email,
@@ -43,11 +51,15 @@ async function authRedirectService(requestToken) {
       authParams,
       accessToken,
     });
+
+    const { token, expiresIn } = response.data;
+
     return {
       status: 200,
       message: 'User logged in',
       data: {
-        accessToken,
+        accessToken: token,
+        expiresIn,
         userName,
       },
     };

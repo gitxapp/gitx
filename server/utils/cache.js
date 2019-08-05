@@ -1,9 +1,8 @@
 import { Query } from 'mongoose';
 import { createClient } from 'redis';
 import { promisify } from 'util';
-import { redisUrl } from '../config/keys';
 
-const client = createClient(redisUrl);
+const client = createClient(process.env.REDIS_URL);
 client.hget = promisify(client.hget);
 const { exec } = Query.prototype;
 
@@ -27,9 +26,7 @@ Query.prototype.exec = async (...args) => {
   // If we do, return that
   if (cacheValue) {
     const doc = JSON.parse(cacheValue);
-    return Array.isArray(doc)
-      ? doc.map(d => new this.model(d))
-      : new this.model(doc);
+    return Array.isArray(doc) ? doc.map(d => new this.model(d)) : new this.model(doc);
   }
 
   // Otherwise, issue the query and store the result in redis
