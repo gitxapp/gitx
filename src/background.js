@@ -1,14 +1,39 @@
 function openGithubLogin() {
-  console.log('eeee');
   window.open(
-    'https://github.com/login/oauth/authorize?client_id=532649fddafad8da7008&redirect_uri=http://localhost:5000/api/v1/oauth/redirect',
+    'https://github.com/login/oauth/authorize?client_id=d349f2ece984aa05df0b&redirect_uri=http://localhost:5000/api/v1/oauth/redirect',
     '_blank',
   );
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('github-login-btn').addEventListener('click', () => {
-    openGithubLogin();
-    console.log('eee');
+function checkForAuth() {
+  const loginBtn = document.getElementById('github-login-btn');
+  const logoutBtn = document.getElementById('github-logout-btn');
+  window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
+    const authToken = result.githubPrivateCommentToken;
+    if (!authToken) {
+      loginBtn.style.display = 'block';
+      logoutBtn.style.display = 'none';
+    } else {
+      loginBtn.style.display = 'none';
+      logoutBtn.style.display = 'block';
+    }
   });
+}
+
+function openGithubLogout() {
+  window.chrome.storage.sync.remove(['githubPrivateCommentToken'], () => {
+    checkForAuth();
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const loginBtn = document.getElementById('github-login-btn');
+  const logoutBtn = document.getElementById('github-logout-btn');
+  loginBtn.addEventListener('click', () => {
+    openGithubLogin();
+  });
+  logoutBtn.addEventListener('click', () => {
+    openGithubLogout();
+  });
+  checkForAuth();
 });

@@ -9,9 +9,10 @@
     "default_popup": "index.html",
     "default_title": "Eye Blinker"
   },
+  "permissions": ["storage"],
   "content_scripts": [
     {
-      "matches": ["https://github.com/", "https://github.com/*/issues/*"],
+      "matches": ["<all_urls>"],
       "js": ["main.js"]
     }
   ],

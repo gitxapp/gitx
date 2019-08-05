@@ -136,17 +136,21 @@ async function init() {
     } catch (error) {
       console.log('error', error);
     }
-  } else {
-    console.log('Extension: position marker not found.');
   }
 }
 window.onload = () => {
-  const authToken = Cookie.get('private-user-token');
-  console.log('authToken-->', authToken);
-  init();
-  // if (!authToken) {
-  //   createFooter();
-  // } else {
-  //   init();
-  // }
+  window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
+    const authToken = result.githubPrivateCommentToken;
+    if (!authToken) {
+      createFooter();
+    } else {
+      init();
+    }
+  });
 };
+
+window.addEventListener('message', e => {
+  if (e.data && e.data.type === 'githubPrivateCommentToken') {
+    window.chrome.storage.sync.set({ githubPrivateCommentToken: e.data.value });
+  }
+});

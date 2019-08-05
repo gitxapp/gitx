@@ -13,6 +13,15 @@ async function authRedirectService(requestToken) {
       },
     });
     const { access_token: accessToken } = accessTokenResponse.data;
+    if (!accessToken) {
+      return {
+        status: 400,
+        message: 'Oauth failed',
+        data: {
+          error: accessTokenResponse.data,
+        },
+      };
+    }
     const authParams = accessTokenResponse.data;
     const userDetailsResponse = await axios({
       method: 'get',

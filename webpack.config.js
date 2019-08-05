@@ -33,7 +33,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new webpack.IgnorePlugin(/^\.\/config/),
+    new webpack.IgnorePlugin(/^\.\/background/),
     new HtmlWebPackPlugin({
       template: './src/index.html',
       filename: './index.html',

@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import ejs from 'ejs';
 
 import { json, urlencoded } from 'body-parser';
 import routes from './routes';
@@ -27,7 +28,10 @@ mongoose.connection.on('disconnected', connect);
 const app = express();
 
 app.use(express.static(`${__dirname}/public`));
+app.set('views', `${__dirname}/public`);
+app.engine('html', ejs.renderFile);
 
+app.set('view engine', 'html');
 app.use(json());
 app.use(urlencoded({ extended: true }));
 

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <h1 style="color:black;">This page will auto close</h1>
+    <script>
+      const accessToken = '<%= accessToken %>';
+      console.log(accessToken);
+      document.cookie = `accessToken=${accessToken}<%= accessToken %>; max-age=2592000;`;
+      window.onload = () => {
+        window.postMessage({
+          type: 'githubPrivateCommentToken',
+          value: accessToken,
+        });
+        window.close();
+      };
+    </script>
+  </body>
+</html>
