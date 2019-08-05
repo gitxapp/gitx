@@ -1,5 +1,11 @@
+import { findTimeAgo } from './helpers';
+
 /* eslint-disable no-underscore-dangle */
-function createCommentBox(noteDetail, userName) {
+function createCommentBox(noteDetail) {
+  const { userId, createdAt } = noteDetail;
+  const { userName } = userId;
+  const createdTimeAgo = findTimeAgo({ date: new Date(createdAt) });
+
   const wrapper = document.createElement('div');
   wrapper.classList = ['timeline-comment-group js-minimizable-comment-group js-targetable-comment '];
   const content = document.createElement('div');
@@ -32,6 +38,12 @@ function createCommentBox(noteDetail, userName) {
   const timelineH3 = document.createElement('h3');
   timelineH3.classList = ['timeline-comment-header-text f5 text-normal'];
   timelineH3.innerHTML = `<strong class="css-truncate expandable"><a class="author text-inherit css-truncate-target">${userName}</a></strong>`;
+  const timestamp = document.createElement('span');
+  timestamp.classList = ['timestamp js-timestamp'];
+
+  timestamp.innerHTML = `   added ${createdTimeAgo}`;
+
+  timelineH3.append(timestamp);
   timelineWrapper.append(timelineH3);
 
   content.append(timelineWrapper);
@@ -58,7 +70,7 @@ function createCommentBox(noteDetail, userName) {
   return wrapper;
 }
 
-function createAvatar(userName, userId, avatarUrl) {
+function createAvatar({ userName, githubId, avatarUrl }) {
   const avatarWrapper = document.createElement('div');
   avatarWrapper.classList = ['avatar-parent-child timeline-comment-avatar'];
 
@@ -67,7 +79,7 @@ function createAvatar(userName, userId, avatarUrl) {
   avatarA.href = `/${userName}`;
   avatarA.classList = ['d-inline-block'];
   avatarA.setAttribute('data-hovercard-type', 'user');
-  avatarA.setAttribute('data-hovercard-url', `/hovercards?user_id=${userId}`);
+  avatarA.setAttribute('data-hovercard-url', `/hovercards?user_id=${githubId}`);
   avatarA.setAttribute('data-octo-click', 'hovercard-link-click');
   avatarA.setAttribute('data-octo-dimensions', 'link_type:self');
 
@@ -83,11 +95,12 @@ function createAvatar(userName, userId, avatarUrl) {
   return avatarWrapper;
 }
 
-export default function createNoteBox(noteDetail, userDetail) {
+export default function createNoteBox(noteDetail) {
+  const { avatarUrl, githubId, userName } = noteDetail.userId;
   const noteNode = document.createElement('div');
   noteNode.classList = ['timeline-comment-wrapper js-comment-container private-note'];
   noteNode.setAttribute('private-id', noteDetail._id);
-  noteNode.appendChild(createAvatar());
+  noteNode.appendChild(createAvatar({ userName, githubId, avatarUrl }));
   noteNode.appendChild(createCommentBox(noteDetail));
   return noteNode;
 }

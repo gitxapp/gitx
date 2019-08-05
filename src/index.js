@@ -6,7 +6,7 @@ import createFooter from './footer';
 import { getAllNotes, removeNote, createNote } from './api';
 import './style.css';
 // Retrieve user id from session
-const userId = '5d43c19fdfe146fa6a9a905b';
+const userId = '5d47c19542574ea43512c258';
 let noteContent = '';
 let allNotes = [];
 let nearestCommentId = null;
@@ -89,6 +89,8 @@ function createPrivateNoteAddButton() {
       commentBoxes = document.querySelectorAll('.js-comment-container');
       commentBoxCount = commentBoxes.length;
       nearestBox = commentBoxes[commentBoxCount - 2];
+      console.log('allNotes[allNotes.length - 1]', allNotes[allNotes.length - 1]);
+
       // eslint-disable-next-line no-underscore-dangle
       nearestBox.after(createNoteBox(allNotes[allNotes.length - 1]));
       textArea.value = '';

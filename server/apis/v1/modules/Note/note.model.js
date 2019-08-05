@@ -18,4 +18,13 @@ const noteSchema = new Schema(
   { timestamps: true },
 );
 
+noteSchema.post('save', (doc, next) => {
+  doc
+    .populate('userId', 'userName avatarUrl githubId')
+    .execPopulate()
+    .then(() => {
+      next();
+    });
+});
+
 export default mongoose.model('Note', noteSchema);

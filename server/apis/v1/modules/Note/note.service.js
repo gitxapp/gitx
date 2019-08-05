@@ -1,5 +1,6 @@
-import Note from './note.model';
 import mongoose from 'mongoose';
+
+import Note from './note.model';
 
 async function createNote(noteDetails) {
   const { userId } = noteDetails;
