@@ -1,20 +1,25 @@
 import minAjax from './ajax';
 import { URL, VERSION } from './constants';
 
-export const getAllNotes = ({ issueId }) => {
+export const getAllNotes = ({ issueId, projectName, noteType }) => {
   try {
     return new Promise(resolve => {
       window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
         const authToken = result.githubPrivateCommentToken;
         minAjax({
-          url: `${URL}${VERSION}/note/issue/${issueId}`, // request URL
-          type: 'GET',
+          url: `${URL}${VERSION}/note/all`, // request URL
+          type: 'POST',
           headers: [
             {
               type: 'Authorization',
               value: `Bearer ${authToken}`,
             },
-          ], // Request type GET/POST
+          ],
+          data: {
+            issueId,
+            projectName,
+            noteType,
+          },
           success(results) {
             // Retrieve all the notes based on issue id
             const formattedResults = JSON.parse(results);
@@ -29,7 +34,7 @@ export const getAllNotes = ({ issueId }) => {
   }
 };
 // eslint-disable-next-line
-export const createNote = ({ userId, noteContent, noteType, issueId, nearestCommentId }) => {
+export const createNote = ({ noteContent, noteType, issueId, nearestCommentId, projectName }) => {
   try {
     return new Promise(resolve => {
       window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
@@ -44,14 +49,14 @@ export const createNote = ({ userId, noteContent, noteType, issueId, nearestComm
             },
           ],
           data: {
-            userId,
             noteContent,
             noteType,
             issueId,
             nearestCommentId,
+            projectName,
           },
-          success(result) {
-            const formattedResult = JSON.parse(result);
+          success(results) {
+            const formattedResult = JSON.parse(results);
 
             const newlyCreatedNote = formattedResult.data;
             resolve(newlyCreatedNote);
@@ -63,13 +68,15 @@ export const createNote = ({ userId, noteContent, noteType, issueId, nearestComm
     return null;
   }
 };
-export const removeNote = ({ noteId }) => {
+
+// eslint-disable-next-line
+export const removeNote = ({ noteId, issueId, projectName, noteType }) => {
   try {
     return new Promise(resolve => {
       window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
         const authToken = result.githubPrivateCommentToken;
         minAjax({
-          url: `${URL}${VERSION}/note/delete/${noteId}`, // request URL
+          url: `${URL}${VERSION}/note/delete`, // request URL
           type: 'POST', // Request type GET/POST
           headers: [
             {
@@ -77,8 +84,14 @@ export const removeNote = ({ noteId }) => {
               value: `Bearer ${authToken}`,
             },
           ],
-          success(result) {
-            const formattedResult = JSON.parse(result);
+          data: {
+            issueId,
+            projectName,
+            noteType,
+            noteId,
+          },
+          success(results) {
+            const formattedResult = JSON.parse(results);
             const deletedNote = formattedResult.data;
             resolve(deletedNote);
           },

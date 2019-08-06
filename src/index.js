@@ -14,6 +14,7 @@ const currentUrl = document.location.toString().toLowerCase();
 const urlParams = currentUrl.split('/');
 const issueId = urlParams[urlParams.length - 1];
 const noteType = currentUrl.includes('issue') ? 'issue' : 'pull';
+const projectName = urlParams[urlParams.length - 3];
 
 // Disable/Enable Add private button based on value entered
 function onInputValueChange(e) {
@@ -47,6 +48,9 @@ async function deleteNote(noteId) {
   try {
     await removeNote({
       noteId,
+      noteType,
+      issueId,
+      projectName,
     });
 
     // Remove deleted note from node
@@ -92,6 +96,7 @@ function createPrivateNoteAddButton() {
         noteType,
         issueId,
         nearestCommentId,
+        projectName,
       });
 
       allNotes.push(newlyCreatedNote);
@@ -118,6 +123,8 @@ async function init() {
       // Load all the notes based on issue id
       allNotes = await getAllNotes({
         issueId,
+        projectName,
+        noteType,
       });
 
       positionMarker.prepend(createPrivateNoteAddButton());
@@ -134,12 +141,6 @@ async function init() {
             notesNearestToCommentBox.reverse().forEach(element => {
               commentBox.after(createNoteBox(element));
               if (commentBox) {
-                // document
-                //   .getElementById(`comment-box-${element._id}`)
-                //   .addEventListener('click', e => {
-                //     console.log('deleteNote', element);
-                //     deleteNote(element._id);
-                //   });
                 bindDeleteEventToNote(element);
               }
             });

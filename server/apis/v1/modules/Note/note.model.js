@@ -5,12 +5,16 @@ const { Schema } = mongoose;
 const noteSchema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User' },
-    noteContent: String,
+    projectName: {
+      type: String,
+      required: true,
+    },
     noteType: String, // pull or issue
     issueId: {
       type: String,
       required: true,
     }, // issue or pull id
+    noteContent: String,
     nearestCommentId: String,
     nearestCreatedDate: { type: Date },
     isActive: { type: Boolean, default: true },

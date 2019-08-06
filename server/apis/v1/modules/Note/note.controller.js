@@ -12,7 +12,8 @@ async function createNoteController(req, res) {
 }
 
 async function getNotesController(req, res) {
-  const action = await NoteService.getNotes(req.user._id, req.params.issueId);
+  const noteDetails = req.body;
+  const action = await NoteService.getNotes(req.user._id, noteDetails);
   res.status(action.status).send({
     message: action.message,
     data: action.data || {},
@@ -20,7 +21,9 @@ async function getNotesController(req, res) {
 }
 
 async function deleteNotesController(req, res) {
-  const action = await NoteService.deleteNote(req.user._id, req.params.noteId);
+  const noteDetails = req.body;
+
+  const action = await NoteService.deleteNote(req.user._id, noteDetails);
   res.status(action.status).send({
     message: action.message,
     data: action.data || {},

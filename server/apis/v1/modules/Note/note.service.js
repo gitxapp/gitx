@@ -7,7 +7,7 @@ const converter = new showdown.Converter();
 
 async function createNote(noteDetails) {
   const { userId } = noteDetails;
-
+  const { issueId, projectName } = noteDetails;
   const note = new Note(noteDetails);
 
   note.noteContent = converter.makeHtml(note.noteContent);
@@ -17,6 +17,19 @@ async function createNote(noteDetails) {
       message: 'User id is required',
     };
   }
+  if (!issueId) {
+    return {
+      status: 400,
+      message: 'Issue id or Pull id is required',
+    };
+  }
+  if (!projectName) {
+    return {
+      status: 400,
+      message: 'Project name is required',
+    };
+  }
+
   try {
     await note.save();
     return {
@@ -33,12 +46,12 @@ async function createNote(noteDetails) {
   }
 }
 
-async function getNotes(userId, issueId) {
+async function getNotes(userId, noteDetails) {
   try {
-    const notes = await Note.find({ $and: [{ userId }, { issueId }] }).populate(
-      'userId',
-      'userName avatarUrl githubId',
-    );
+    const { projectName, issueId, noteType } = noteDetails;
+    const notes = await Note.find({
+      $and: [{ userId }, { issueId }, { projectName }, { noteType }],
+    }).populate('userId', 'userName avatarUrl githubId');
     notes.forEach(note => {
       // eslint-disable-next-line
       note.noteContent = converter.makeHtml(note.noteContent);
@@ -57,18 +70,25 @@ async function getNotes(userId, issueId) {
   }
 }
 
-async function deleteNote(userId, noteId) {
+async function deleteNote(userId, noteDetails) {
+  const { projectName, issueId, noteType, noteId } = noteDetails;
   if (!noteId) {
     return {
       status: 400,
       message: 'Note id is required',
     };
   }
+
   try {
-    const note = await Note.findOne({ _id: mongoose.Types.ObjectId(noteId), userId }).populate(
-      'userId',
-      'userName avatarUrl githubId',
-    );
+    const note = await Note.findOne({
+      $and: [
+        { _id: mongoose.Types.ObjectId(noteId) },
+        { userId },
+        { issueId },
+        { projectName },
+        { noteType },
+      ],
+    }).populate('userId', 'userName avatarUrl githubId');
     if (note) note.remove();
     return {
       status: 200,

@@ -6,8 +6,8 @@ const router = Router();
 // Create a new note
 router.post('/', NoteController.createNoteController);
 // Get note details from userId
-router.get('/issue/:issueId', NoteController.getNotesController);
+router.post('/all', NoteController.getNotesController);
 // Delete a note
-router.post('/delete/:noteId', NoteController.deleteNotesController);
+router.post('/delete', NoteController.deleteNotesController);
 
 export default router;
