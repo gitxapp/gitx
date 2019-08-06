@@ -3,10 +3,14 @@ import showdown from 'showdown';
 
 import Note from './note.model';
 
+const converter = new showdown.Converter();
+
 async function createNote(noteDetails) {
   const { userId } = noteDetails;
 
   const note = new Note(noteDetails);
+
+  note.noteContent = converter.makeHtml(note.noteContent);
   if (!userId) {
     return {
       status: 400,
@@ -30,13 +34,13 @@ async function createNote(noteDetails) {
 }
 
 async function getNotes(userId, issueId) {
-  const converter = new showdown.Converter();
   try {
     const notes = await Note.find({ $and: [{ userId }, { issueId }] }).populate(
       'userId',
       'userName avatarUrl githubId',
     );
     notes.forEach(note => {
+      // eslint-disable-next-line
       note.noteContent = converter.makeHtml(note.noteContent);
     });
     return {
