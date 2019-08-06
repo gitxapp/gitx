@@ -74,7 +74,6 @@ function createPrivateNoteAddButton() {
   button.disabled = textArea && !textArea.value;
   button.onclick = async () => {
     button.disabled = true;
-    const textArea = document.getElementById('new_comment_field');
     let commentBoxes = document.querySelectorAll('.js-comment-container:not(.private-note)');
     let commentBoxCount = commentBoxes.length;
     // Find nearest comment id
@@ -94,8 +93,6 @@ function createPrivateNoteAddButton() {
       commentBoxes = document.querySelectorAll('.js-comment-container');
       commentBoxCount = commentBoxes.length;
       nearestBox = commentBoxes[commentBoxCount - 2];
-      console.log('allNotes[allNotes.length - 1]', allNotes[allNotes.length - 1]);
-
       // eslint-disable-next-line no-underscore-dangle
       nearestBox.after(createNoteBox(allNotes[allNotes.length - 1]));
       textArea.value = '';
