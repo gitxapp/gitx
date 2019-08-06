@@ -4,8 +4,7 @@ import createNoteBox from './noteBox';
 import createFooter from './footer';
 import { getAllNotes, removeNote, createNote } from './api';
 import './style.css';
-// Retrieve user id from session
-const userId = '5d47c19542574ea43512c258';
+
 let noteContent = '';
 let allNotes = [];
 let nearestCommentId = null;
@@ -59,9 +58,16 @@ async function deleteNote(noteId) {
       }
     });
   } catch (error) {
-    console.log('error', error);
+    console.log('Delete note error:', error);
   }
 }
+
+function bindDeleteEventToNote(note) {
+  document.getElementById(`comment-box-${note._id}`).addEventListener('click', () => {
+    deleteNote(note._id);
+  });
+}
+
 // Create add private note  button
 function createPrivateNoteAddButton() {
   const textArea = document.getElementById('new_comment_field');
@@ -82,7 +88,6 @@ function createPrivateNoteAddButton() {
     nearestCommentId = nearestBox.split('-').pop();
     try {
       const newlyCreatedNote = await createNote({
-        userId,
         noteContent,
         noteType,
         issueId,
@@ -95,9 +100,11 @@ function createPrivateNoteAddButton() {
       nearestBox = commentBoxes[commentBoxCount - 2];
       // eslint-disable-next-line no-underscore-dangle
       nearestBox.after(createNoteBox(allNotes[allNotes.length - 1]));
+      bindDeleteEventToNote(newlyCreatedNote);
+
       textArea.value = '';
     } catch (error) {
-      console.log('error', error);
+      console.log('Add note error:', error);
     }
   };
   return button;
@@ -127,12 +134,13 @@ async function init() {
             notesNearestToCommentBox.reverse().forEach(element => {
               commentBox.after(createNoteBox(element));
               if (commentBox) {
-                document
-                  .getElementById(`comment-box-${element._id}`)
-                  .addEventListener('click', e => {
-                    console.log('deleteNote', element);
-                    deleteNote(element._id);
-                  });
+                // document
+                //   .getElementById(`comment-box-${element._id}`)
+                //   .addEventListener('click', e => {
+                //     console.log('deleteNote', element);
+                //     deleteNote(element._id);
+                //   });
+                bindDeleteEventToNote(element);
               }
             });
           }

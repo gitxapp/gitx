@@ -2,9 +2,9 @@
 import NoteService from './note.service';
 
 async function createNoteController(req, res) {
-  const userDetails = req.body;
-  userDetails.userId = req.user._id;
-  const action = await NoteService.createNote(userDetails);
+  const noteDetails = req.body;
+  noteDetails.userId = req.user._id;
+  const action = await NoteService.createNote(noteDetails);
   res.status(action.status).send({
     message: action.message,
     data: action.data || {},
