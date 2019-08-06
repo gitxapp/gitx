@@ -6,8 +6,8 @@
   "scripts": {
     "start": "webpack-dev-server --mode development --open",
     "dev": "webpack --mode development",
-    "build": "webpack --mode production",
-    "start-be": "nodemon -r esm server/app.js",
+    "client": "webpack --mode production",
+    "server": "nodemon -r esm server/app.js",
     "debug": "node -r esm --inspect server/app.js"
   },
   "repository": {
