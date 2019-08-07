@@ -16,6 +16,10 @@ const issueId = urlParams[urlParams.length - 1];
 const noteType = currentUrl.includes('issue') ? 'issue' : 'pull';
 const projectName = urlParams[urlParams.length - 3];
 
+function hasSomeParentTheClass(element, classname) {
+  if (element.className && element.className.split(' ').indexOf(classname) >= 0) return element;
+  return element.parentNode && hasSomeParentTheClass(element.parentNode, classname);
+}
 // Disable/Enable Add private button based on value entered
 function onInputValueChange(e) {
   const addPrivateNoteButton = document.getElementById('add_private_note_button');
@@ -103,8 +107,13 @@ function createPrivateNoteAddButton() {
       commentBoxes = document.querySelectorAll('.js-comment-container');
       commentBoxCount = commentBoxes.length;
       nearestBox = commentBoxes[commentBoxCount - 2];
+      const nearestDiscussionBody = hasSomeParentTheClass(nearestBox, 'timeline-comment-wrapper');
       // eslint-disable-next-line no-underscore-dangle
-      nearestBox.after(createNoteBox(allNotes[allNotes.length - 1]));
+      if (nearestDiscussionBody) {
+        nearestDiscussionBody.after(createNoteBox(allNotes[allNotes.length - 1]));
+      } else {
+        nearestBox.after(createNoteBox(allNotes[allNotes.length - 1]));
+      }
       bindDeleteEventToNote(newlyCreatedNote);
 
       textArea.value = '';
@@ -132,6 +141,10 @@ async function init() {
         // Iterate all the comments and append notes
         const commentBoxes = document.querySelectorAll('.js-comment-container');
         commentBoxes.forEach(commentBox => {
+          const commentBoxDiscussionBody = hasSomeParentTheClass(
+            commentBox,
+            'timeline-comment-wrapper',
+          );
           const commentBoxId = commentBox.querySelector('.timeline-comment-group');
           if (commentBoxId) {
             const commentId = commentBoxId.id.split('-').pop();
@@ -139,7 +152,11 @@ async function init() {
             const findNotesNearestToComment = obj => obj.nearestCommentId === commentId;
             const notesNearestToCommentBox = allNotes.filter(findNotesNearestToComment);
             notesNearestToCommentBox.reverse().forEach(element => {
-              commentBox.after(createNoteBox(element));
+              if (commentBoxDiscussionBody) {
+                commentBoxDiscussionBody.after(createNoteBox(element));
+              } else {
+                commentBox.after(createNoteBox(element));
+              }
               if (commentBox) {
                 bindDeleteEventToNote(element);
               }

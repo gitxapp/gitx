@@ -1,4 +1,4 @@
-const APP_ID = '532649fddafad8da7008';
+const APP_ID = 'd349f2ece984aa05df0b';
 
 function openGithubLogin() {
   window.open(
