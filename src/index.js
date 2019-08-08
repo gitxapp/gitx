@@ -127,7 +127,10 @@ function createPrivateNoteAddButton() {
 async function init() {
   initInputArea();
   const positionMarker = document.getElementById('partial-new-comment-form-actions');
+
   if (positionMarker) {
+    positionMarker.prepend(createPrivateNoteAddButton());
+
     try {
       // Load all the notes based on issue id
       allNotes = await getAllNotes({
@@ -135,8 +138,6 @@ async function init() {
         projectName,
         noteType,
       });
-
-      positionMarker.prepend(createPrivateNoteAddButton());
       if (allNotes.length) {
         // Iterate all the comments and append notes
         const commentBoxes = document.querySelectorAll('.js-comment-container');
