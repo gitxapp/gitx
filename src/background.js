@@ -1,5 +1,5 @@
 const APP_ID = '532649fddafad8da7008';
-const REDIRECT_URL = 'http://52.88.123.16:5000/api/v1/oauth/redirect';
+const REDIRECT_URL = 'https://morning-headland-55324.herokuapp.com/api/v1/oauth/redirect';
 const AUTH_URL = `https://github.com/login/oauth/authorize?client_id=${APP_ID}&redirect_uri=${REDIRECT_URL}`;
 function openGithubLogin() {
   window.open(AUTH_URL, '_blank');
