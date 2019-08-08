@@ -42,7 +42,11 @@ app.use(
     credentials: true,
   }),
 );
-
+app.get('/', (req, res) => {
+  res.send({
+    message: 'App is working',
+  });
+});
 // eslint-disable-next-line global-require
 app.all('/api/*', validateRequest);
 

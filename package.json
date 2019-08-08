@@ -4,10 +4,10 @@
   "description": "Chrome extension for adding private comments in Github",
   "main": "webpack.config.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development --open",
+    "start:f": "webpack-dev-server --mode development --open",
     "dev": "webpack --mode development",
     "client": "webpack --mode production",
-    "server": "nodemon -r esm server/app.js",
+    "start": "nodemon -r esm server/app.js",
     "debug": "node -r esm --inspect server/app.js"
   },
   "repository": {
