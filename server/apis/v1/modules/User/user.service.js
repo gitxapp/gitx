@@ -38,14 +38,6 @@ async function createOrUpdate({
   authParams,
   accessToken,
 }) {
-  // eslint-disable-next-line
-  if (!email) {
-    return {
-      status: 401,
-      message: 'Email not found',
-    };
-  }
-
   const userDetails = {
     userName,
     githubId,
