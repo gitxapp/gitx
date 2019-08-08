@@ -8,6 +8,7 @@
     "dev": "webpack --mode development",
     "client": "webpack --mode production",
     "start": "nodemon -r esm server/app.js",
+    "server": "DEBUG=express:* babel-node server/app.js",
     "debug": "node -r esm --inspect server/app.js"
   },
   "repository": {
@@ -22,7 +23,11 @@
   },
   "homepage": "https://github.com/muhzi4u/github-private-comments-extension#readme",
   "devDependencies": {
-    "@babel/preset-env": "^7.5.4",
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/node": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-polyfill": "^6.26.0",

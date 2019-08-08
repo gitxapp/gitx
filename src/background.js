@@ -1,10 +1,8 @@
-const APP_ID = 'd349f2ece984aa05df0b';
-
+const APP_ID = '532649fddafad8da7008';
+const REDIRECT_URL = 'http://52.88.123.16:5000/api/v1/oauth/redirect';
+const AUTH_URL = `https://github.com/login/oauth/authorize?client_id=${APP_ID}&redirect_uri=${REDIRECT_URL}`;
 function openGithubLogin() {
-  window.open(
-    `https://github.com/login/oauth/authorize?client_id=${APP_ID}&redirect_uri=http://localhost:5000/api/v1/oauth/redirect`,
-    '_blank',
-  );
+  window.open(AUTH_URL, '_blank');
 }
 
 function checkForAuth() {
