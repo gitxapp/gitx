@@ -124,7 +124,7 @@ function createPrivateNoteAddButton() {
   return button;
 }
 
-async function init() {
+async function injectContent() {
   initInputArea();
   const positionMarker = document.getElementById('partial-new-comment-form-actions');
 
@@ -170,18 +170,34 @@ async function init() {
     }
   }
 }
-window.onload = () => {
+
+function init() {
   window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
     const authToken = result.githubPrivateCommentToken;
 
     if (!authToken) {
       createFooter();
     } else {
-      init();
+      injectContent();
     }
   });
+}
+
+window.onload = () => {
+  init();
 };
 
+window.onhashchange = (e) => {
+  console.log(e)
+  init();
+}
+
+chrome.runtime.onMessage.addListener(
+  function(request) {
+    if (request.reInitScript)
+    init();
+  }
+);
 window.addEventListener('message', e => {
   if (e.data && e.data.type === 'githubPrivateCommentToken') {
     window.chrome.storage.sync.set({ githubPrivateCommentToken: e.data.value });
