@@ -96,6 +96,9 @@ function createAvatar({ userName, githubId, avatarUrl }) {
 }
 
 export default function createNoteBox(noteDetail) {
+  if (!noteDetail.userId) {
+    noteDetail.userId = {}
+  }
   const { avatarUrl, githubId, userName } = noteDetail.userId;
   const noteNode = document.createElement('div');
   noteNode.classList = ['timeline-comment-wrapper js-comment-container private-note'];
