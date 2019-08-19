@@ -3,18 +3,19 @@
 import createNoteBox from './noteBox';
 import createFooter from './footer';
 import { getAllNotes, removeNote, createNote } from './api';
+import { findURLAttributes, checkUrlIsIssueOrPull } from './helpers';
 import './style.css';
 
 let noteContent = '';
 let allNotes = [];
 let nearestCommentId = null;
 
-// Check the url is issue or pull
-const currentUrl = document.location.toString().toLowerCase();
-const urlParams = currentUrl.split('/');
-const issueId = urlParams[urlParams.length - 1];
-const noteType = currentUrl.includes('issue') ? 'issue' : 'pull';
-const projectName = urlParams[urlParams.length - 3];
+const {
+  location: { href: currentUrl },
+} = document;
+const urlAttributes = findURLAttributes({ currentUrl });
+
+const { issueId, noteType, projectName } = urlAttributes;
 
 function hasSomeParentTheClass(element, classname) {
   if (element.className && element.className.split(' ').indexOf(classname) >= 0) return element;
@@ -57,7 +58,7 @@ async function deleteNote(noteId) {
       projectName,
     });
 
-    // Remove deleted note from node
+    // Remove deleted note from dom
     const commentBoxes = document.querySelectorAll('.private-note');
     commentBoxes.forEach(commentBox => {
       const commentBoxPrivateId = commentBox.getAttribute('private-id');
@@ -188,7 +189,6 @@ window.onload = () => {
 };
 
 window.addEventListener('message', e => {
-  console.log(e)
   if (e.data && e.data.type === 'githubPrivateCommentToken') {
     window.chrome.storage.sync.set({ githubPrivateCommentToken: e.data.value });
   }
@@ -196,9 +196,15 @@ window.addEventListener('message', e => {
 
 (document.body || document.documentElement).addEventListener(
   'transitionend',
-  function() {
-    const add_private_note_button = document.getElementById('add_private_note_button');
-    if (!add_private_note_button) init();
+  () => {
+    const {
+      location: { href: URL },
+    } = document;
+
+    if (checkUrlIsIssueOrPull({ URL })) {
+      const privateButton = document.getElementById('add_private_note_button');
+      if (!privateButton) init();
+    }
   },
   true,
 );
