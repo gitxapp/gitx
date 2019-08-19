@@ -37,13 +37,3 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   checkForAuth();
 });
-
-chrome.tabs.onUpdated.addListener(
-  function(tabId, changeInfo, tab) {
-    if (changeInfo.url) {
-      if(changeInfo.url.indexOf("https://github.com")>-1){
-        chrome.tabs.sendMessage(tabId, {reInitScript: true});
-      }
-    }
-  }
-);

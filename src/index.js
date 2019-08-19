@@ -187,19 +187,18 @@ window.onload = () => {
   init();
 };
 
-window.onhashchange = (e) => {
-  console.log(e)
-  init();
-}
-
-chrome.runtime.onMessage.addListener(
-  function(request) {
-    if (request.reInitScript)
-    init();
-  }
-);
 window.addEventListener('message', e => {
+  console.log(e)
   if (e.data && e.data.type === 'githubPrivateCommentToken') {
     window.chrome.storage.sync.set({ githubPrivateCommentToken: e.data.value });
   }
 });
+
+(document.body || document.documentElement).addEventListener(
+  'transitionend',
+  function() {
+    const add_private_note_button = document.getElementById('add_private_note_button');
+    if (!add_private_note_button) init();
+  },
+  true,
+);
