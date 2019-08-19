@@ -38,3 +38,8 @@ export const findURLAttributes = ({ currentUrl }) => {
     projectName,
   };
 };
+export const checkUrlIsIssueOrPull = ({ URL }) => {
+  const noteType = URL.includes('issue') ? 'issue' : 'pull';
+  if (noteType === 'issue' || noteType === 'pull') return true;
+  return false;
+};

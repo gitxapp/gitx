@@ -3,7 +3,7 @@
 import createNoteBox from './noteBox';
 import createFooter from './footer';
 import { getAllNotes, removeNote, createNote } from './api';
-import { findURLAttributes } from './helpers';
+import { findURLAttributes, checkUrlIsIssueOrPull } from './helpers';
 import './style.css';
 
 let noteContent = '';
@@ -58,7 +58,7 @@ async function deleteNote(noteId) {
       projectName,
     });
 
-    // Remove deleted note from node
+    // Remove deleted note from dom
     const commentBoxes = document.querySelectorAll('.private-note');
     commentBoxes.forEach(commentBox => {
       const commentBoxPrivateId = commentBox.getAttribute('private-id');
@@ -197,8 +197,14 @@ window.addEventListener('message', e => {
 (document.body || document.documentElement).addEventListener(
   'transitionend',
   () => {
-    const privateButton = document.getElementById('add_private_note_button');
-    if (!privateButton) init();
+    const {
+      location: { href: URL },
+    } = document;
+
+    if (checkUrlIsIssueOrPull({ URL })) {
+      const privateButton = document.getElementById('add_private_note_button');
+      if (!privateButton) init();
+    }
   },
   true,
 );
