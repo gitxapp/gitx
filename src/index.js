@@ -89,12 +89,11 @@ function createPrivateNoteAddButton() {
   button.disabled = textArea && !textArea.value;
   button.onclick = async () => {
     button.disabled = true;
-    let commentBoxes = document.querySelectorAll('.js-comment-container:not(.private-note)');
-    let commentBoxCount = commentBoxes.length;
+    const commentBoxes = document.querySelectorAll('[data-gid]:not([id])');
+    const commentBoxCount = commentBoxes.length;
     // Find nearest comment id
-    let nearestBox = commentBoxes[commentBoxCount - 2].querySelector('.js-comment-container [id]')
-      .id;
-    nearestCommentId = nearestBox.split('-').pop();
+    let nearestBox = commentBoxes[commentBoxCount - 1];
+    nearestCommentId = nearestBox.getAttribute('data-gid');
     try {
       const newlyCreatedNote = await createNote({
         noteContent,
@@ -105,16 +104,13 @@ function createPrivateNoteAddButton() {
       });
 
       allNotes.push(newlyCreatedNote);
-      commentBoxes = document.querySelectorAll('.js-comment-container');
-      commentBoxCount = commentBoxes.length;
-      nearestBox = commentBoxes[commentBoxCount - 2];
-      const nearestDiscussionBody = hasSomeParentTheClass(nearestBox, 'timeline-comment-wrapper');
-      // eslint-disable-next-line no-underscore-dangle
-      if (nearestDiscussionBody) {
-        nearestDiscussionBody.after(createNoteBox(allNotes[allNotes.length - 1]));
-      } else {
-        nearestBox.after(createNoteBox(allNotes[allNotes.length - 1]));
+      while (
+        nearestBox.nextElementSibling &&
+        nearestBox.nextElementSibling.getAttribute('private-id')
+      ) {
+        nearestBox = nearestBox.nextSibling;
       }
+      nearestBox.after(createNoteBox(allNotes[allNotes.length - 1]));
       bindDeleteEventToNote(newlyCreatedNote);
 
       textArea.value = '';
@@ -125,13 +121,29 @@ function createPrivateNoteAddButton() {
   return button;
 }
 
-async function injectContent() {
+async function injectContent(apiCall) {
+  const commentBtn = document.querySelector(
+    '#partial-new-comment-form-actions > button:nth-child(1)',
+  );
+  if (commentBtn) {
+    commentBtn.onclick = () => {
+      setTimeout(() => {
+        injectContent(false);
+      }, 3000);
+    };
+  }
   initInputArea();
   const positionMarker = document.getElementById('partial-new-comment-form-actions');
-
+  // similar comments hide the gitex comments so opening the collapsible similar comments
+  const collapsed = document.querySelectorAll('.Details-element.details-reset');
+  collapsed.forEach(el => {
+    el.setAttribute('open', true);
+  });
   if (positionMarker) {
     positionMarker.prepend(createPrivateNoteAddButton());
-
+    if (!apiCall) {
+      return;
+    }
     try {
       // Load all the notes based on issue id
       allNotes = await getAllNotes({
@@ -141,29 +153,17 @@ async function injectContent() {
       });
       if (allNotes.length) {
         // Iterate all the comments and append notes
-        const commentBoxes = document.querySelectorAll('.js-comment-container');
+        const commentBoxes = document.querySelectorAll('[data-gid]:not([id])');
         commentBoxes.forEach(commentBox => {
-          const commentBoxDiscussionBody = hasSomeParentTheClass(
-            commentBox,
-            'timeline-comment-wrapper',
-          );
-          const commentBoxId = commentBox.querySelector('.timeline-comment-group');
-          if (commentBoxId) {
-            const commentId = commentBoxId.id.split('-').pop();
-
-            const findNotesNearestToComment = obj => obj.nearestCommentId === commentId;
-            const notesNearestToCommentBox = allNotes.filter(findNotesNearestToComment);
-            notesNearestToCommentBox.reverse().forEach(element => {
-              if (commentBoxDiscussionBody) {
-                commentBoxDiscussionBody.after(createNoteBox(element));
-              } else {
-                commentBox.after(createNoteBox(element));
-              }
-              if (commentBox) {
-                bindDeleteEventToNote(element);
-              }
-            });
-          }
+          const commentId = commentBox.getAttribute('data-gid');
+          const findNotesNearestToComment = obj => obj.nearestCommentId === commentId;
+          const notesNearestToCommentBox = allNotes.filter(findNotesNearestToComment);
+          notesNearestToCommentBox.reverse().forEach(element => {
+            commentBox.after(createNoteBox(element));
+            if (commentBox) {
+              bindDeleteEventToNote(element);
+            }
+          });
         });
       }
     } catch (error) {
@@ -179,7 +179,7 @@ function init() {
     if (!authToken) {
       createFooter();
     } else {
-      injectContent();
+      injectContent(true);
     }
   });
 }

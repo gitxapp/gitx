@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <style>
+      .widget-body {
+        margin: 0;
+        background: black;
+        width: 100px;
+        height: 50px;
+      }
+
+      .discussion-timeline-actions {
+        margin-top: calc(50% - 20px);
+      }
+    </style>
     <meta charset="UTF-8" />
     <title>Private Notes</title>
     <script src="./background.js"></script>
   </head>
 
-  <body>
+  <body class="widget-body">
     <div class="discussion-timeline-actions">
       <button id="github-login-btn">Connect to GitHub</button>
       <button id="github-logout-btn">Logout</button>

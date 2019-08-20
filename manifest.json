@@ -9,10 +9,7 @@
     "default_popup": "index.html",
     "default_title": "GitX"
   },
-  "permissions": [
-    "storage",
-    "tabs"
-  ],
+  "permissions": ["storage", "tabs"],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
@@ -22,7 +19,8 @@
   "background": [
     {
       "scripts": ["background.js"],
-      "persistent": false
+      "persistent": false,
+      "css": ["widget.css"]
     }
   ]
 }
