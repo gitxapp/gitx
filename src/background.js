@@ -8,14 +8,20 @@ function openGithubLogin() {
 function checkForAuth() {
   const loginBtn = document.getElementById('github-login-btn');
   const logoutBtn = document.getElementById('github-logout-btn');
+  const loginMsg = document.getElementById('login-msg');
+  const logoutMsg = document.getElementById('loggedout-msg');
   window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
     const authToken = result.githubPrivateCommentToken;
     if (!authToken) {
       loginBtn.style.display = 'block';
       logoutBtn.style.display = 'none';
+      loginMsg.style.display = 'none';
+      logoutMsg.style.display = 'block';
     } else {
       loginBtn.style.display = 'none';
       logoutBtn.style.display = 'block';
+      logoutMsg.style.display = 'none';
+      loginMsg.style.display = 'block';
     }
   });
 }

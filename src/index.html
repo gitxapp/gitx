@@ -4,13 +4,35 @@
     <style>
       .widget-body {
         margin: 0;
-        background: black;
-        width: 100px;
-        height: 50px;
+        width: 300px;
       }
-
-      .discussion-timeline-actions {
-        margin-top: calc(50% - 20px);
+      #github-logout-btn {
+        width: 70px;
+        float: right;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        height: 30px;
+        background: #2d3035;
+        color: #fff;
+        border: 1px solid;
+        border-radius: 5px;
+      }
+      #github-login-btn {
+        width: 84px;
+        float: right;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        height: 40px;
+        background: #2d3035;
+        color: #fff;
+        border: 1px solid;
+        border-radius: 5px;
+      }
+      h3 {
+        margin: 15px;
+      }
+      p {
+        margin: 0 15px;
       }
     </style>
     <meta charset="UTF-8" />
@@ -19,6 +41,15 @@
   </head>
 
   <body class="widget-body">
+    <h3>
+      GitX-Private comments for GitHub
+    </h3>
+    <p id="login-msg">
+      Goto github issues/pull request tab to see the private notes.
+    </p>
+    <p id="loggedout-msg">
+      You need to login to your GitHub account to enable this feature.
+    </p>
     <div class="discussion-timeline-actions">
       <button id="github-login-btn">Connect to GitHub</button>
       <button id="github-logout-btn">Logout</button>
