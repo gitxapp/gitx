@@ -9,17 +9,12 @@ import './style.css';
 let noteContent = '';
 let allNotes = [];
 let nearestCommentId = null;
-
-const {
-  location: { href: currentUrl },
-} = document;
-const urlAttributes = findURLAttributes({ currentUrl });
-
-const { issueId, noteType, projectName } = urlAttributes;
-
-function hasSomeParentTheClass(element, classname) {
-  if (element.className && element.className.split(' ').indexOf(classname) >= 0) return element;
-  return element.parentNode && hasSomeParentTheClass(element.parentNode, classname);
+let urlAttributes;
+function initUrlAttributes() {
+  const {
+    location: { href: currentUrl },
+  } = document;
+  urlAttributes = findURLAttributes({ currentUrl });
 }
 // Disable/Enable Add private button based on value entered
 function onInputValueChange(e) {
@@ -50,6 +45,8 @@ function initInputArea() {
 }
 
 async function deleteNote(noteId) {
+  const { issueId, noteType, projectName } = urlAttributes;
+
   try {
     await removeNote({
       noteId,
@@ -94,7 +91,10 @@ function createPrivateNoteAddButton() {
     // Find nearest comment id
     let nearestBox = commentBoxes[commentBoxCount - 1];
     nearestCommentId = nearestBox.getAttribute('data-gid');
+
     try {
+      const { issueId, noteType, projectName } = urlAttributes;
+
       const newlyCreatedNote = await createNote({
         noteContent,
         noteType,
@@ -145,6 +145,8 @@ async function injectContent(apiCall) {
       return;
     }
     try {
+      const { issueId, noteType, projectName } = urlAttributes;
+
       // Load all the notes based on issue id
       allNotes = await getAllNotes({
         issueId,
@@ -179,6 +181,7 @@ function init() {
     if (!authToken) {
       createFooter();
     } else {
+      initUrlAttributes();
       injectContent(true);
     }
   });

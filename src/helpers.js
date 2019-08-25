@@ -32,6 +32,7 @@ export const findURLAttributes = ({ currentUrl }) => {
   const issueId = urlParams[urlParams.length - 1];
   const noteType = currentUrl.includes('issue') ? 'issue' : 'pull';
   const projectName = urlParams[urlParams.length - 3];
+
   return {
     issueId,
     noteType,
