@@ -3,6 +3,10 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = {
+  entry: {
+    main: './src/index.js',
+    background: './src/background.js',
+  },
   watch: true,
   watchOptions: {
     aggregateTimeout: 300,
