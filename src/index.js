@@ -86,7 +86,9 @@ function createPrivateNoteAddButton() {
   button.disabled = textArea && !textArea.value;
   button.onclick = async () => {
     button.disabled = true;
-    const commentBoxes = document.querySelectorAll('[data-gid]:not([id])');
+    const commentBoxes = document.querySelectorAll(
+      '[data-gid]:not([id]):not(.merge-status-list-wrapper',
+    );
     const commentBoxCount = commentBoxes.length;
     // Find nearest comment id
     let nearestBox = commentBoxes[commentBoxCount - 1];
@@ -155,7 +157,9 @@ async function injectContent(apiCall) {
       });
       if (allNotes.length) {
         // Iterate all the comments and append notes
-        const commentBoxes = document.querySelectorAll('[data-gid]:not([id])');
+        const commentBoxes = document.querySelectorAll(
+          '[data-gid]:not([id]):not(.merge-status-list-wrapper)',
+        );
         commentBoxes.forEach(commentBox => {
           const commentId = commentBox.getAttribute('data-gid');
           const findNotesNearestToComment = obj => obj.nearestCommentId === commentId;
