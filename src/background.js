@@ -1,5 +1,5 @@
 import { APP_ID, REDIRECT_URL } from './constants';
-// const REDIRECT_URL = 'http://localhost:5000/api/v1/oauth/redirect';
+
 const AUTH_URL = `https://github.com/login/oauth/authorize?client_id=${APP_ID}&redirect_uri=${REDIRECT_URL}`;
 function openGithubLogin() {
   window.open(AUTH_URL, '_blank');

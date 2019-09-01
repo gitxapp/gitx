@@ -1,6 +1,6 @@
 {
   "name": "GitX",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Chrome extension for adding private comments in Github",
   "main": "webpack.config.js",
   "scripts": {
