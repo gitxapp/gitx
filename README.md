@@ -1,4 +1,8 @@
-# GitX
+<h1 align="center">
+  <br>
+  <a href="https://chrome.google.com/webstore/detail/gitx-private-notes-for-gi/mheimfkblidpjbpdinfcipgggfdkinoe"><img src="src/icons/icon128.png" alt="Markdownify" width="200"></a>
+
+</h1>
 
 <h4 align="center">Chrome extension for adding private comments in Github
 </h4>
