@@ -69,8 +69,14 @@ async function deleteNote(noteId) {
 }
 
 function bindDeleteEventToNote(note) {
-  document.getElementById(`comment-box-${note._id}`).addEventListener('click', () => {
-    deleteNote(note._id);
+  const deleteBox = document.getElementById(`comment-box-${note._id}`);
+
+  deleteBox.addEventListener('click', () => {
+    const answer = window.confirm('Are you sure you want to delete this note?');
+
+    if (answer) {
+      deleteNote(note._id);
+    }
   });
 }
 
