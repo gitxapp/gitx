@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://chrome.google.com/webstore/detail/gitx-private-notes-for-gi/mheimfkblidpjbpdinfcipgggfdkinoe"><img src="src/icons/icon128.png" alt="Markdownify" width="200"></a>
+  <a href="https://chrome.google.com/webstore/detail/gitx-private-notes-for-gi/mheimfkblidpjbpdinfcipgggfdkinoe"><img src="icons/icon128.png" alt="GitX" width="200"></a>
 
 </h1>
 
