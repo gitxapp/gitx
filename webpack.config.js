@@ -42,6 +42,10 @@ module.exports = {
       template: './src/index.html',
       filename: './index.html',
     }),
-    new CopyWebpackPlugin([{ from: 'manifest.json' }, { from: 'src/background.js' }]),
+    new CopyWebpackPlugin([
+      { from: 'manifest.json' },
+      { from: 'src/background.js' },
+      { from: 'icons', to: 'icons' },
+    ]),
   ],
 };
