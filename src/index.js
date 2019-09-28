@@ -78,11 +78,12 @@ function bindDeleteEventToNote(note) {
 function createPrivateNoteAddButton() {
   const textArea = document.getElementById('new_comment_field');
   const button = document.createElement('button');
-  button.textContent = 'Add private notes';
+  button.textContent = 'Make Note';
   button.id = 'add_private_note_button';
   button.type = 'button';
   button.classList.add('btn');
   button.classList.add('btn-primary');
+  button.classList.add('ml-1"');
   button.disabled = textArea && !textArea.value;
   button.onclick = async () => {
     button.disabled = true;
