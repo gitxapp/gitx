@@ -130,6 +130,7 @@ function createPrivateNoteAddButton() {
 }
 
 async function injectContent(apiCall) {
+  const addedNoteIds = [];
   const commentBtn = document.querySelector(
     '#partial-new-comment-form-actions > button:nth-child(1)',
   );
@@ -166,14 +167,20 @@ async function injectContent(apiCall) {
         const commentBoxes = document.querySelectorAll(
           '[data-gid]:not([id]):not(.merge-status-list-wrapper)',
         );
+
         commentBoxes.forEach(commentBox => {
           const commentId = commentBox.getAttribute('data-gid');
+
           const findNotesNearestToComment = obj => obj.nearestCommentId === commentId;
           const notesNearestToCommentBox = allNotes.filter(findNotesNearestToComment);
           notesNearestToCommentBox.reverse().forEach(element => {
-            commentBox.after(createNoteBox(element));
-            if (commentBox) {
-              bindDeleteEventToNote(element);
+            const { _id: noteId } = element;
+            if (!addedNoteIds.includes(noteId)) {
+              addedNoteIds.push(noteId);
+              commentBox.after(createNoteBox(element));
+              if (commentBox) {
+                bindDeleteEventToNote(element);
+              }
             }
           });
         });
