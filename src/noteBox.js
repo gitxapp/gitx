@@ -70,7 +70,7 @@ function createCommentBox(noteDetail) {
   tr.classList = ['d-block'];
   const td = document.createElement('td');
   td.classList = ['d-block comment-body markdown-body  js-comment-body'];
-  td.innerHTML = `<p>${noteDetail.noteContent}</p>`;
+  td.innerHTML = noteDetail.noteContent;
   tr.appendChild(td);
   tbody.appendChild(tr);
   table.appendChild(tbody);
