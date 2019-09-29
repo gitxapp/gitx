@@ -132,9 +132,13 @@ function createPrivateNoteAddButton() {
 
 async function injectContent(apiCall) {
   const addedNoteIds = [];
-  const commentBtn = document.querySelector(
-    '#partial-new-comment-form-actions > button:nth-child(1)',
-  );
+  const actionBtns = document.querySelector('#partial-new-comment-form-actions > div');
+  let commentBtn = {};
+  [].forEach.call(actionBtns.children, btn => {
+    if (btn.children[0].innerText === 'Comment') {
+      commentBtn = btn;
+    }
+  });
   if (commentBtn) {
     commentBtn.onclick = () => {
       setTimeout(() => {
