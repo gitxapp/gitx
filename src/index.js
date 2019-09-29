@@ -89,11 +89,7 @@ function createPrivateNoteAddButton() {
   button.type = 'button';
   button.classList.add('btn');
   button.classList.add('btn-primary');
-<<<<<<< HEAD
-  button.classList.add('ml-1"');
-=======
   button.classList.add('ml-1');
->>>>>>> d77198a96e2a7752340d3ed933ab6df3bed5548e
   button.disabled = textArea && !textArea.value;
   button.onclick = async () => {
     button.disabled = true;
