@@ -178,7 +178,10 @@ async function injectContent(apiCall) {
 
           const findNotesNearestToComment = obj => obj.nearestCommentId === commentId;
           const notesNearestToCommentBox = allNotes.filter(findNotesNearestToComment);
-          notesNearestToCommentBox.reverse().forEach(element => {
+          const sortedNotes = notesNearestToCommentBox.sort(
+            (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt),
+          );
+          sortedNotes.forEach(element => {
             const { _id: noteId } = element;
             if (!addedNoteIds.includes(noteId)) {
               addedNoteIds.push(noteId);
