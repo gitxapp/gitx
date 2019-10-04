@@ -1,4 +1,4 @@
-import http from 'http';
+const http = require('http');
 
 const HEROKU_URL = 'gitextended.herokuapp.com';
 
