@@ -7,7 +7,7 @@
     "start:f": "webpack-dev-server --mode development --open",
     "dev": "webpack --mode development",
     "client": "webpack --mode production",
-    "start": "nodemon -r esm server/app.js",
+    "start": "nodemon -r esm server/app.js & nodemon heroku-ping-test.js",
     "server": "DEBUG=express:* babel-node server/app.js",
     "debug": "node -r esm --inspect server/app.js"
   },

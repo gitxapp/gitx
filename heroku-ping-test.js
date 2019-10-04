@@ -1,11 +1,11 @@
 const http = require('http');
 
-const HEROKU_URL = 'gitextended.herokuapp.com';
+console.log('Heroku ping test started');
 
 function startKeepAlive() {
   setInterval(() => {
     const options = {
-      host: HEROKU_URL,
+      host: process.env.HEROKU_URL,
       port: 80,
       path: '/',
     };
@@ -23,6 +23,6 @@ function startKeepAlive() {
       .on('error', err => {
         console.log(`Error: ${err.message}`);
       });
-  }, 1 * 60 * 1000); // load every 20 minutes
+  }, 20 * 60 * 1000); // load every 20 minutes
 }
 startKeepAlive();
