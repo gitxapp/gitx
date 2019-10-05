@@ -83,6 +83,7 @@ function bindDeleteEventToNote(note) {
 // Create add private note  button
 function createPrivateNoteAddButton() {
   const textArea = document.getElementById('new_comment_field');
+
   const button = document.createElement('button');
   button.textContent = 'Make Note';
   button.id = 'add_private_note_button';
@@ -127,7 +128,10 @@ function createPrivateNoteAddButton() {
       console.log('Add note error:', error);
     }
   };
-  return button;
+  const pvtNoteBtn = document.getElementById('add_private_note_button');
+  if (!pvtNoteBtn) {
+    return button;
+  }
 }
 
 async function injectContent(apiCall) {
@@ -135,12 +139,20 @@ async function injectContent(apiCall) {
   const actionBtns = document.querySelector('#partial-new-comment-form-actions > div');
   let commentBtn = {};
   [].forEach.call(actionBtns.children, btn => {
-    if (btn.children[0].innerText === 'Comment') {
+    if (btn.children.length && btn.children[0] && btn.children[0].innerText === 'Comment') {
       commentBtn = btn;
     }
   });
   if (commentBtn) {
     commentBtn.onclick = () => {
+      setTimeout(() => {
+        injectContent(false);
+      }, 3000);
+    };
+  }
+  const closeIssueBtn = document.getElementsByName('comment_and_close');
+  if (closeIssueBtn && closeIssueBtn.length) {
+    closeIssueBtn[0].onclick = () => {
       setTimeout(() => {
         injectContent(false);
       }, 3000);
