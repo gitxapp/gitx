@@ -94,10 +94,9 @@ function createPrivateNoteAddButton() {
   button.disabled = textArea && !textArea.value;
   button.onclick = async () => {
     button.disabled = true;
-    const commentBoxes = document.querySelectorAll(
-      '[data-gid]:not([id]):not(.merge-status-list-wrapper), [private-id]',
+    let commentBoxes = document.querySelectorAll(
+      '[data-gid]:not([id]):not(.merge-status-list-wrapper).js-timeline-item',
     );
-    const pvtCmtBoxes = document.querySelectorAll('[private-id]');
     const commentBoxCount = commentBoxes.length;
     // Find nearest comment id
     let nearestBox = commentBoxes[commentBoxCount - 1];
