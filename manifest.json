@@ -1,7 +1,7 @@
 {
   "name": "GitX- Private notes for GitHub",
   "short_name": "GitX",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "manifest_version": 2,
   "description": "Chrome extension for adding private notes in Github",
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
