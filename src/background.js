@@ -2,7 +2,7 @@ import { APP_ID, REDIRECT_URL } from './constants';
 
 const AUTH_URL = `https://github.com/login/oauth/authorize?client_id=${APP_ID}&redirect_uri=${REDIRECT_URL}`;
 function openGithubLogin() {
-  window.open(AUTH_URL, '_blank');
+  window.chrome.tabs.create({ url: AUTH_URL });
 }
 
 function checkForAuth() {
@@ -42,4 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
     openGithubLogout();
   });
   checkForAuth();
+});
+window.chrome.runtime.setUninstallURL('http://yoursite.com/');
+window.chrome.runtime.onInstalled.addListener(details => {
+  if (details.reason === 'install') {
+    window.chrome.tabs.create({ url: 'https://www.google.com' });
+  }
 });

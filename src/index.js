@@ -94,7 +94,7 @@ function createPrivateNoteAddButton() {
   button.disabled = textArea && !textArea.value;
   button.onclick = async () => {
     button.disabled = true;
-    let commentBoxes = document.querySelectorAll(
+    const commentBoxes = document.querySelectorAll(
       '[data-gid]:not([id]):not(.merge-status-list-wrapper).js-timeline-item',
     );
     const commentBoxCount = commentBoxes.length;
@@ -138,11 +138,13 @@ async function injectContent(apiCall) {
   const addedNoteIds = [];
   const actionBtns = document.querySelector('#partial-new-comment-form-actions > div');
   let commentBtn = {};
-  [].forEach.call(actionBtns.children, btn => {
-    if (btn.children.length && btn.children[0] && btn.children[0].innerText === 'Comment') {
-      commentBtn = btn;
-    }
-  });
+  if (actionBtns) {
+    [].forEach.call(actionBtns.children, btn => {
+      if (btn.children.length && btn.children[0] && btn.children[0].innerText === 'Comment') {
+        commentBtn = btn;
+      }
+    });
+  }
   if (commentBtn) {
     commentBtn.onclick = () => {
       setTimeout(() => {
