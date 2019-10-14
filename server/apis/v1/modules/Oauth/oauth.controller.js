@@ -3,7 +3,7 @@ import OauthService from './oauth.service';
 async function createOauth(req, res) {
   const action = await OauthService.authRedirectService(req.query.code);
   if (action.status === 200) {
-    res.render('../public/welcome.html', { accessToken: action.data.accessToken });
+    res.render(process.env.WELCOME_URL, { accessToken: action.data.accessToken });
   } else {
     res.status(action.status).send({
       message: action.message,
