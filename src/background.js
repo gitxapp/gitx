@@ -1,4 +1,4 @@
-import { APP_ID, REDIRECT_URL, UN_INSTALL_URL } from './constants';
+import { APP_ID, REDIRECT_URL, UN_INSTALL_URL, INSTALL_URL } from './constants';
 
 const AUTH_URL = `https://github.com/login/oauth/authorize?client_id=${APP_ID}&redirect_uri=${REDIRECT_URL}`;
 function openGithubLogin() {
@@ -46,6 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
 window.chrome.runtime.setUninstallURL(UN_INSTALL_URL);
 window.chrome.runtime.onInstalled.addListener(details => {
   if (details.reason === 'install') {
-    window.chrome.tabs.create({ url: AUTH_URL });
+    window.chrome.tabs.create({ url: INSTALL_URL });
   }
 });

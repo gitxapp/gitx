@@ -1,5 +1,6 @@
 export const VERSION = 'v1';
 
+export const INSTALL_URL = 'http://www.gitxapp.com/connect.html';
 export const UN_INSTALL_URL = 'http://www.gitxapp.com/uninstall.html';
 export const URL = 'https://gitextended.herokuapp.com/api/';
 export const REDIRECT_URL = 'https://gitextended.herokuapp.com/api/v1/oauth/redirect';
