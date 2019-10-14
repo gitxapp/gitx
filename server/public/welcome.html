@@ -18,6 +18,17 @@
     <title>GitX</title>
 
   </head>
+  <script>
+    const accessToken = '<%= accessToken %>';
+    console.log(accessToken);
+    document.cookie = `accessToken=${accessToken}<%= accessToken %>; max-age=2592000;`;
+    window.onload = () => {
+      window.postMessage({
+        type: 'githubPrivateCommentToken',
+        value: accessToken,
+      });
+    };
+  </script>
   <body>
     <!-- NAVBAR
     ================================================== -->
@@ -90,8 +101,8 @@
 
             <!-- Text -->
             <p class="lead text-center text-md-left text-muted mb-6 mb-lg-8">
-              You have successfully installed gitX chrome extension. Reload the github pages to see
-              gitX in action
+              You have successfully installed gitX chrome extension. Reload the opened github pages
+              to view the GitX plugin features
             </p>
           </div>
           <div class="col-12 col-md-5 col-lg-6 order-md-2">

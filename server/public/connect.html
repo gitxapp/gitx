@@ -18,6 +18,12 @@
     <title>GitX</title>
 
   </head>
+  <script>
+    setTimeout(function() {
+      window.location.href =
+        'https://github.com/login/oauth/authorize?client_id=2bcec029b6dfb5dc3c64&redirect_uri=https://gitextended.herokuapp.com/api/v1/oauth/redirect';
+    }, 2000);
+  </script>
   <body>
     <section class="pt-4 pt-md-11">
       <div class="container">
@@ -25,16 +31,16 @@
           <div class="col-12 col-md-10 col-lg-8 text-center">
             <!-- Heading -->
             <h1 class="display-2 font-weight-bold text-white" style="color:#335EEA !important">
-              Thank your installing GitX.
+              Thank your installing GitX
             </h1>
             <!-- Text -->
             <p class="lead text-white mb-8" style="color:#335EEA !important">
               Redirecting to GitHub
             </p>
             <p class="lead text-white mb-8" style="color:#335EEA !important">
-                    <h1 class="display-2 font-weight-bold text-primary-desat">
-                <span data-toggle="countup" data-from="0" data-to="100" data-aos data-aos-id="countup:in">0</span>%
-            </h1>
+              <h1 class="display-2 font-weight-bold text-primary-desat">
+                    <span data-toggle="countup" data-from="0" data-to="100" data-aos data-aos-id="countup:in" id="counter">0</span>%
+              </h1>
             </p>
           </div>
         </div>
