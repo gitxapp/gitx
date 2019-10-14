@@ -85,7 +85,7 @@ function createPrivateNoteAddButton() {
   const textArea = document.getElementById('new_comment_field');
 
   const button = document.createElement('button');
-  button.textContent = 'Make Note';
+  button.textContent = 'Add a private note';
   button.id = 'add_private_note_button';
   button.type = 'button';
   button.classList.add('btn');
