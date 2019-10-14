@@ -43,9 +43,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   checkForAuth();
 });
-window.chrome.runtime.setUninstallURL('http://yoursite.com/');
-window.chrome.runtime.onInstalled.addListener(details => {
-  if (details.reason === 'install') {
-    window.chrome.tabs.create({ url: 'https://www.google.com' });
-  }
-});
+// window.chrome.runtime.setUninstallURL('http://yoursite.com/');
+// window.chrome.runtime.onInstalled.addListener(details => {
+//   if (details.reason === 'install') {
+//     window.chrome.tabs.create({ url: 'http://yoursite.com/' });
+//   }
+// });
