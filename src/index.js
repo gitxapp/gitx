@@ -132,6 +132,7 @@ function createPrivateNoteAddButton() {
   if (!pvtNoteBtn) {
     return button;
   }
+  return null;
 }
 
 async function injectContent(apiCall) {
@@ -168,7 +169,10 @@ async function injectContent(apiCall) {
     el.setAttribute('open', true);
   });
   if (positionMarker) {
-    positionMarker.prepend(createPrivateNoteAddButton());
+    const makeANoteBtn = createPrivateNoteAddButton();
+    if (makeANoteBtn) {
+      positionMarker.prepend(makeANoteBtn);
+    }
     if (!apiCall) {
       return;
     }
