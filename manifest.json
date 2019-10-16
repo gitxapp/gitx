@@ -1,7 +1,7 @@
 {
   "name": "GitX- Private notes for GitHub",
   "short_name": "GitX",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "manifest_version": 2,
   "description": "Chrome extension for adding private notes in Github",
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
@@ -23,7 +23,11 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://github.com/*", "https://gitextended.herokuapp.com/*"],
+      "matches": [
+        "https://github.com/*",
+        "https://gitextended.herokuapp.com/*",
+        "https://gitxapp.com/*"
+      ],
       "js": ["main.js"]
     }
   ]
