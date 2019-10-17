@@ -40,7 +40,10 @@ export const findURLAttributes = ({ currentUrl }) => {
   };
 };
 export const checkUrlIsIssueOrPull = ({ URL }) => {
-  const noteType = URL.includes('issue') ? 'issue' : 'pull';
+  let noteType = '';
+  if (URL.includes('issue')) noteType = 'issue';
+  if (URL.includes('pull')) noteType = 'pull';
+
   if (noteType === 'issue' || noteType === 'pull') return true;
   return false;
 };

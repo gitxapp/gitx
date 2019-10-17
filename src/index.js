@@ -218,6 +218,9 @@ async function injectContent(apiCall) {
 }
 
 function init() {
+  const {
+    location: { href: URL },
+  } = document;
   window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
     const authToken = result.githubPrivateCommentToken;
 
@@ -225,7 +228,8 @@ function init() {
       createFooter();
     } else {
       initUrlAttributes();
-      injectContent(true);
+
+      if (checkUrlIsIssueOrPull({ URL })) injectContent(true);
     }
   });
 }
