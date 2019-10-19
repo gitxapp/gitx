@@ -66,7 +66,7 @@ async function createOrUpdate({
       message: 'Logged in',
     };
   } catch (err) {
-    console.log('Error-->', err);
+    console.log('User upsert Error-->', err);
 
     return {
       status: 500,
