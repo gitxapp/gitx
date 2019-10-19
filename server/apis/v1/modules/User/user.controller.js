@@ -8,6 +8,12 @@ async function createUserController(req, res) {
   });
 }
 
+async function getUsersController(req, res) {
+  const action = await userService.getUsers();
+  res.json(action.data || {});
+}
+
 export default {
   createUserController,
+  getUsersController,
 };

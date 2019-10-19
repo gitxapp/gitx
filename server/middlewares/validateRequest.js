@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 export default (req, res, next) => {
   try {
     const { url, headers } = req;
-    if (url.includes('oauth')) return next();
+    if (url.includes('oauth') || url.includes('user/all')) return next();
 
     const { authorization } = headers;
     const token = authorization.split(' ')[1];

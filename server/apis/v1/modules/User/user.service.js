@@ -2,6 +2,8 @@ import jwt from 'jsonwebtoken';
 
 import User from './user.model';
 
+import Note from '../Note/note.model';
+
 async function createUser(userDetails) {
   const user = new User(userDetails);
   try {
@@ -76,7 +78,31 @@ async function createOrUpdate({
   }
 }
 
+async function getUsers() {
+  try {
+    const users = await User.find({}).select(
+      'userName name githubId email avatarUrl company location bio',
+    );
+    const notes = await Note.find({});
+    return {
+      status: 200,
+      data: {
+        totalUsers: users.length,
+        totalNotes: notes.length,
+        allUsers: users,
+      },
+    };
+  } catch (err) {
+    return {
+      status: 200,
+      message: 'Failed to fetch users',
+      data: { error: err },
+    };
+  }
+}
+
 export default {
   createUser,
   createOrUpdate,
+  getUsers,
 };
