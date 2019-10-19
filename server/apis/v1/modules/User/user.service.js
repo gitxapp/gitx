@@ -50,6 +50,8 @@ async function createOrUpdate({
     accessToken,
   };
   try {
+    console.log('User Details', userName, githubId, email);
+
     await User.update({ githubId }, userDetails, { upsert: true });
     const updatedUser = await User.findOne({ githubId });
     userDetails._id = updatedUser._id;
