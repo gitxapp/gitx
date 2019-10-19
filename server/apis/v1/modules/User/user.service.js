@@ -50,11 +50,12 @@ async function createOrUpdate({
     accessToken,
   };
   try {
-    console.log('User Details', userName, githubId, email);
+    User.dropIndex('email');
+    console.log('User Details -->', userName, githubId, email);
 
     await User.update({ githubId }, userDetails, { upsert: true });
     const updatedUser = await User.findOne({ githubId });
-    console.log('updatedUser', updatedUser);
+    console.log('Updated User -->', updatedUser);
 
     userDetails._id = updatedUser._id;
     userDetails.expiresIn = '7d';
@@ -66,7 +67,7 @@ async function createOrUpdate({
       message: 'Logged in',
     };
   } catch (err) {
-    console.log('Error', err);
+    console.log('Error-->', err);
 
     return {
       status: 500,
