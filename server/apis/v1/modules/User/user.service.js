@@ -54,6 +54,8 @@ async function createOrUpdate({
 
     await User.update({ githubId }, userDetails, { upsert: true });
     const updatedUser = await User.findOne({ githubId });
+    console.log('updatedUser', updatedUser);
+
     userDetails._id = updatedUser._id;
     userDetails.expiresIn = '7d';
     userDetails.token = jwt.sign(userDetails, process.env.JWT_KEY);
@@ -64,6 +66,8 @@ async function createOrUpdate({
       message: 'Logged in',
     };
   } catch (err) {
+    console.log('Error', err);
+
     return {
       status: 500,
       message: 'User not created',
