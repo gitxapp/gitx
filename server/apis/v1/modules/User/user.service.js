@@ -50,7 +50,6 @@ async function createOrUpdate({
     accessToken,
   };
   try {
-    User.dropIndex('email');
     console.log('User Details -->', userName, githubId, email);
 
     await User.update({ githubId }, userDetails, { upsert: true });
