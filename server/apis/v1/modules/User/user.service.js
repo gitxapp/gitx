@@ -50,8 +50,8 @@ async function createOrUpdate({
     accessToken,
   };
   try {
-    await User.update({ email }, userDetails, { upsert: true });
-    const updatedUser = await User.findOne({ email });
+    await User.update({ githubId }, userDetails, { upsert: true });
+    const updatedUser = await User.findOne({ githubId });
     userDetails._id = updatedUser._id;
     userDetails.expiresIn = '7d';
     userDetails.token = jwt.sign(userDetails, process.env.JWT_KEY);
