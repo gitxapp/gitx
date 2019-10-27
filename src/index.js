@@ -166,7 +166,9 @@ async function injectContent(apiCall) {
   // similar comments hide the gitex comments so opening the collapsible similar comments
   const collapsed = document.querySelectorAll('.Details-element.details-reset');
   collapsed.forEach(el => {
-    el.setAttribute('open', true);
+    if (el) {
+      el.setAttribute('open', true);
+    }
   });
   if (positionMarker) {
     const makeANoteBtn = createPrivateNoteAddButton();
@@ -218,9 +220,6 @@ async function injectContent(apiCall) {
 }
 
 function init() {
-  const {
-    location: { href: URL },
-  } = document;
   window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
     const authToken = result.githubPrivateCommentToken;
 
@@ -228,8 +227,7 @@ function init() {
       createFooter();
     } else {
       initUrlAttributes();
-
-      if (checkUrlIsIssueOrPull({ URL })) injectContent(true);
+      injectContent(true);
     }
   });
 }
