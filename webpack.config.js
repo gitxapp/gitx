@@ -46,6 +46,7 @@ module.exports = {
       { from: 'manifest.json' },
       { from: 'src/background.js' },
       { from: 'icons', to: 'icons' },
+      { from: 'node_modules/webextension-polyfill/dist/browser-polyfill.js' },
     ]),
   ],
 };

@@ -1,10 +1,11 @@
+import browser from 'webextension-polyfill';
 import minAjax from './ajax';
 import { URL, VERSION } from './constants';
 
 export const getAllNotes = ({ issueId, projectName, noteType }) => {
   try {
     return new Promise(resolve => {
-      window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
+      browser.storage.sync.get(['githubPrivateCommentToken']).then(result => {
         const authToken = result.githubPrivateCommentToken;
         minAjax({
           url: `${URL}${VERSION}/note/all`, // request URL
@@ -37,7 +38,7 @@ export const getAllNotes = ({ issueId, projectName, noteType }) => {
 export const createNote = ({ noteContent, noteType, issueId, nearestCommentId, projectName }) => {
   try {
     return new Promise(resolve => {
-      window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
+      browser.storage.sync.get(['githubPrivateCommentToken']).then(result => {
         const authToken = result.githubPrivateCommentToken;
         minAjax({
           url: `${URL}${VERSION}/note`, // request URL
@@ -73,7 +74,7 @@ export const createNote = ({ noteContent, noteType, issueId, nearestCommentId, p
 export const removeNote = ({ noteId, issueId, projectName, noteType }) => {
   try {
     return new Promise(resolve => {
-      window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
+      browser.storage.sync.get(['githubPrivateCommentToken']).then(result => {
         const authToken = result.githubPrivateCommentToken;
         minAjax({
           url: `${URL}${VERSION}/note/delete`, // request URL

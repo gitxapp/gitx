@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 // Could break if GitHub changes its markup
+import browser from 'webextension-polyfill';
 import createNoteBox from './noteBox';
 import createFooter from './footer';
 import { getAllNotes, removeNote, createNote } from './api';
@@ -115,8 +116,8 @@ function createPrivateNoteAddButton() {
 
       allNotes.push(newlyCreatedNote);
       while (
-        nearestBox.nextElementSibling &&
-        nearestBox.nextElementSibling.getAttribute('private-id')
+        nearestBox.nextElementSibling
+        && nearestBox.nextElementSibling.getAttribute('private-id')
       ) {
         nearestBox = nearestBox.nextSibling;
       }
@@ -220,7 +221,7 @@ async function injectContent(apiCall) {
 }
 
 function init() {
-  window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
+  browser.storage.sync.get(['githubPrivateCommentToken']).then(result => {
     const authToken = result.githubPrivateCommentToken;
 
     if (!authToken) {
@@ -238,7 +239,7 @@ window.onload = () => {
 
 window.addEventListener('message', e => {
   if (e.data && e.data.type === 'githubPrivateCommentToken') {
-    window.chrome.storage.sync.set({ githubPrivateCommentToken: e.data.value });
+    browser.storage.sync.set({ githubPrivateCommentToken: e.data.value });
   }
 });
 

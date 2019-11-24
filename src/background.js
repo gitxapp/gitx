@@ -1,16 +1,19 @@
-import { APP_ID, REDIRECT_URL, UN_INSTALL_URL, INSTALL_URL } from './constants';
+import browser from 'webextension-polyfill';
+import {
+ APP_ID, REDIRECT_URL, UN_INSTALL_URL, INSTALL_URL 
+} from './constants';
 
 const AUTH_URL = `https://github.com/login/oauth/authorize?client_id=${APP_ID}&redirect_uri=${REDIRECT_URL}`;
 function openGithubLogin() {
-  window.chrome.tabs.create({ url: AUTH_URL });
+  browser.tabs.create({ url: AUTH_URL });
 }
 
-function checkForAuth() {
+async function checkForAuth() {
   const loginBtn = document.getElementById('github-login-btn');
   const logoutBtn = document.getElementById('github-logout-btn');
   const loginMsg = document.getElementById('login-msg');
   const logoutMsg = document.getElementById('loggedout-msg');
-  window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
+  browser.storage.sync.get(['githubPrivateCommentToken']).then(result => {
     const authToken = result.githubPrivateCommentToken;
     if (!authToken) {
       loginBtn.style.display = 'block';
@@ -27,7 +30,7 @@ function checkForAuth() {
 }
 
 function openGithubLogout() {
-  window.chrome.storage.sync.remove(['githubPrivateCommentToken'], () => {
+  browser.storage.sync.remove(['githubPrivateCommentToken']).then(() => {
     checkForAuth();
   });
 }
@@ -43,9 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   checkForAuth();
 });
-window.chrome.runtime.setUninstallURL(UN_INSTALL_URL);
-window.chrome.runtime.onInstalled.addListener(details => {
+browser.runtime.setUninstallURL(UN_INSTALL_URL);
+browser.runtime.onInstalled.addListener(details => {
   if (details.reason === 'install') {
-    window.chrome.tabs.create({ url: INSTALL_URL });
+    browser.tabs.create({ url: INSTALL_URL });
   }
 });

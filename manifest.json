@@ -17,9 +17,8 @@
   },
   "permissions": ["storage"],
   "background": {
-    "scripts": ["background.js"],
-    "persistent": false,
-    "css": ["widget.css"]
+    "scripts": ["background.js", "browser-polyfill.js"],
+    "persistent": true
   },
   "content_scripts": [
     {
@@ -28,7 +27,12 @@
         "https://gitextended.herokuapp.com/*",
         "https://gitxapp.com/*"
       ],
-      "js": ["main.js"]
+      "js": ["main.js", "browser-polyfill.js"]
     }
-  ]
+  ],
+  "applications": {
+    "gecko": {
+      "id": "info@gitxapp.com"
+    }
+  }
 }
