@@ -11,7 +11,7 @@
   Built with ❤︎  
 </div>
 
-## Getting Started
+## Getting started
 
 #### Clone the project
 
@@ -28,7 +28,7 @@ cd gitx
 - Create a new app in github by going to https://github.com/settings/apps
 - Set call back url as http://localhost:5000/api/
 
-#### Setup Environment Variables for back end
+#### Setup environment variables for back end
 
 Add `.env` file under the top level of the project.
 
@@ -45,7 +45,7 @@ WELCOME_URL='https://gitxapp.com/welcome.html'
 
 ```
 
-#### Setup Environment Variables for chrome extension
+#### Setup environment variables for chrome extension
 
 Add `constants.js` file under the `src` folder
 
