@@ -17,11 +17,53 @@
 
 ```sh
 # clone it
-git clone https://github.com/muhzi4u/GitX.git
-cd GitX
+git clone https://github.com/gitxapp/gitx.git
+cd gitx
 ```
 
-#### Run the server
+## Preliminary Steps
+
+#### Create a new app in Github
+
+- Create a new app in github by going to https://github.com/settings/apps
+- Set call back url as http://localhost:5000/api/
+
+#### Setup Environment Variables for back end
+
+Add `.env` file under the top level of the project.
+
+Add the following details
+
+```
+DB_URI = 'mongodb://localhost/gitx'
+GITHUB_CLIENT_ID = <GITHUB_APP_CLIENT_ID>
+GITHUB_CLIENT_SECRET = <GITHUB_APP_CLIENT_SECRET>
+JWT_KEY = <JWT_KEY>
+REDIS_URL = 'redis://127.0.0.1:6379'
+HEROKU_URL= <HEROKU_URL>
+WELCOME_URL='https://gitxapp.com/welcome.html'
+
+```
+
+#### Setup Environment Variables for chrome extension
+
+Add `constants.js` file under the `src` folder
+
+Add the following details
+
+```
+export const VERSION = "v1";
+export const INSTALL_URL = "https://gitxapp.com/connect.html";
+export const UN_INSTALL_URL = "https://gitxapp.com/uninstall.html";
+export const URL = "http://localhost:5000/api/";
+export const REDIRECT_URL = "GITHUB_URL";
+export const APP_ID = "GITHUB_APP_CLIENT_ID";
+
+```
+
+## Running the project
+
+#### Run the back end
 
 ```
 # Install dependencies

@@ -1,6 +1,7 @@
 {
   "name": "GitX",
   "version": "0.0.3",
+  "license": "MIT",
   "description": "Chrome extension for adding private comments in Github",
   "main": "webpack.config.js",
   "scripts": {
@@ -11,17 +12,6 @@
     "server": "DEBUG=express:* babel-node server/app.js",
     "debug": "node -r esm --inspect server/app.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/muhzi4u/github-private-comments-extension.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/muhzi4u/github-private-comments-extension/issues"
-  },
-  "homepage": "https://github.com/muhzi4u/github-private-comments-extension#readme",
   "devDependencies": {
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
