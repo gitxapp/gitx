@@ -25,8 +25,8 @@ cd gitx
 
 #### Create a new app in Github
 
-- Create a new app in github by going to https://github.com/settings/apps
-- Set call back url as http://localhost:5000/api/
+- Create a new oauth app in github by going to https://github.com/settings/developers
+- Set call back url as http://localhost:5000/api/v1/oauth/redirect
 
 #### Setup environment variables for back end
 
@@ -56,7 +56,7 @@ export const VERSION = "v1";
 export const INSTALL_URL = "https://gitxapp.com/connect.html";
 export const UN_INSTALL_URL = "https://gitxapp.com/uninstall.html";
 export const URL = "http://localhost:5000/api/";
-export const REDIRECT_URL = "GITHUB_URL";
+export const REDIRECT_URL = "GITHUB_CALLBACK_URL";
 export const APP_ID = "GITHUB_APP_CLIENT_ID";
 
 ```

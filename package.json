@@ -10,7 +10,7 @@
     "client": "webpack --mode production",
     "start": "nodemon -r esm server/app.js & nodemon heroku-ping-test.js",
     "server": "DEBUG=express:* babel-node server/app.js",
-    "debug": "node -r esm --inspect server/app.js"
+    "debug": "nodemon -r esm --inspect server/app.js"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
