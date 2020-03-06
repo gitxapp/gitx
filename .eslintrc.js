@@ -16,6 +16,7 @@ module.exports = {
   rules: {
     "arrow-parens": "off",
     "no-underscore-dangle": "off",
-    quotes: "off"
+    quotes: "off",
+    "comma-dangle": "off"
   }
 };
