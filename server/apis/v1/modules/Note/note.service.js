@@ -22,7 +22,9 @@ async function createNote(user, noteDetails) {
   } = noteDetails;
 
   let userHasAccessToRepo = false;
-  const { _id: userId, userName, accessToken } = user;
+  const { _id: userId, userName, accessToken, avatarUrl, githubId } = user;
+
+  const userDetails = { userName, avatarUrl, githubId };
 
   userHasAccessToRepo = await checkUserIsACollaborator({
     repoOwner,
@@ -48,7 +50,8 @@ async function createNote(user, noteDetails) {
     projectName,
     repoOwner,
     noteVisibility,
-    userId
+    userId,
+    userDetails
   });
 
   note.noteContent = converter.makeHtml(note.noteContent);
