@@ -2,7 +2,7 @@
 // Could break if GitHub changes its markup
 import createNoteBox from "./noteBox";
 import createFooter from "./footer";
-import { getAllNotes, removeNote, createNote } from "./api";
+import { getAllNotes, removeNote, createNote, toggleVisibilityApi } from "./api";
 import { findURLAttributes, checkUrlIsIssueOrPull } from "./helpers";
 import "./style.css";
 
@@ -71,6 +71,15 @@ async function deleteNote(noteId) {
   }
 }
 
+async function toggleVisibility(noteId, noteVisibility) {
+  try {
+    await toggleVisibilityApi({ noteId, noteVisibility })
+  } catch (error) {
+    console.log("Toggle visibility note error:", error);
+  }
+}
+
+
 function bindDeleteEventToNote(note) {
   const deleteBox = document.getElementById(`comment-box-${note._id}`);
 
@@ -80,6 +89,14 @@ function bindDeleteEventToNote(note) {
     if (answer) {
       deleteNote(note._id);
     }
+  });
+}
+
+function bindToggleVisibilityToNote(note) {
+  const toggleCheckbox = document.getElementById(`visible-to-all-${note._id}`);
+  
+  toggleCheckbox.addEventListener("change", () => {
+      toggleVisibility(note._id, toggleCheckbox.checked);
   });
 }
 
@@ -127,6 +144,7 @@ function createPrivateNoteAddButton() {
       }
       nearestBox.after(createNoteBox(allNotes[allNotes.length - 1]));
       bindDeleteEventToNote(newlyCreatedNote);
+      bindToggleVisibilityToNote(newlyCreatedNote);
 
       textArea.value = "";
     } catch (error) {
@@ -214,7 +232,7 @@ async function injectContent(apiCall) {
             findNotesNearestToComment
           );
           const sortedNotes = notesNearestToCommentBox.sort(
-            (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
           );
           sortedNotes.forEach(element => {
             const { _id: noteId } = element;
@@ -223,6 +241,7 @@ async function injectContent(apiCall) {
               commentBox.after(createNoteBox(element));
               if (commentBox) {
                 bindDeleteEventToNote(element);
+                bindToggleVisibilityToNote(element);
               }
             }
           });

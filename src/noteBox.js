@@ -2,8 +2,8 @@ import { findTimeAgo } from "./helpers";
 
 /* eslint-disable no-underscore-dangle */
 function createCommentBox(noteDetail) {
-  const { userDetails, createdAt } = noteDetail;
-  const { userName } = userDetails;
+  const { author, createdAt } = noteDetail;
+  const { userName } = author;
   const createdTimeAgo = findTimeAgo({ date: new Date(createdAt) });
 
   const wrapper = document.createElement("div");
@@ -44,6 +44,10 @@ function createCommentBox(noteDetail) {
     <svg aria-label="Show options" class="octicon octicon-kebab-horizontal" viewBox="0 0 13 16" version="1.1" width="13" height="16" role="img"><path fill-rule="evenodd" d="M1.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm5 0a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM13 7.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"></path></svg>
     </summary>
     <details-menu class="dropdown-menu dropdown-menu-sw show-more-popover text-gray-dark anim-scale-in" style="width:185px" role="menu">
+    <div class="dropdown-item">
+      <label for="visible-to-all-${noteDetail._id}">Visible to all</label>   
+      <input type="checkbox" class="visible-to-all" value="1" id="visible-to-all-${noteDetail._id}" ${noteDetail.noteVisibility ? ' checked="checked" ' : ''}>
+    </div>
       <button type="button" id="comment-box-${noteDetail._id}" class="dropdown-item menu-item-danger btn-link" aria-label="Delete comment">
         Delete
       </button>
@@ -112,10 +116,10 @@ function createAvatar({ userName, githubId, avatarUrl }) {
 }
 
 export default function createNoteBox(noteDetail) {
-  if (!noteDetail.userDetails) {
-    noteDetail.userDetails = {};
+  if (!noteDetail.author) {
+    noteDetail.author = {};
   }
-  const { avatarUrl, githubId, userName } = noteDetail.userDetails;
+  const { avatarUrl, githubId, userName } = noteDetail.author;
   const noteNode = document.createElement("div");
   noteNode.classList = [
     "js-timeline-item js-timeline-progressive-focus-container private-note"

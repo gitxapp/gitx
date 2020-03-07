@@ -120,3 +120,41 @@ export const removeNote = ({
     return null;
   }
 };
+
+
+
+
+// eslint-disable-next-line
+export const toggleVisibilityApi = ({
+  noteId,
+  noteVisibility
+}) => {
+  try {
+    return new Promise(resolve => {
+      window.chrome.storage.sync.get(["githubPrivateCommentToken"], result => {
+        const authToken = result.githubPrivateCommentToken;
+        minAjax({
+          url: `${URL}${VERSION}/note/edit`, // request URL
+          type: "POST", // Request type GET/POST
+          headers: [
+            {
+              type: "Authorization",
+              value: `Bearer ${authToken}`
+            }
+          ],
+          data: {
+            noteId,
+            noteVisibility
+          },
+          success(results) {
+            const formattedResult = JSON.parse(results);
+            const updatedNote = formattedResult.data;
+            resolve(updatedNote);
+          }
+        });
+      });
+    });
+  } catch (error) {
+    return null;
+  }
+};
