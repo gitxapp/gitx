@@ -30,8 +30,19 @@ async function deleteNotesController(req, res) {
   });
 }
 
+async function editNotesController(req, res) {
+  const noteDetails = req.body;
+
+  const action = await NoteService.editNote(req.user._id, noteDetails);
+  res.status(action.status).send({
+    message: action.message,
+    data: action.data || {}
+  });
+}
+
 export default {
   createNoteController,
   getNotesController,
-  deleteNotesController
+  deleteNotesController,
+  editNotesController
 };

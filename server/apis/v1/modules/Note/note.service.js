@@ -83,6 +83,7 @@ async function createNote(user, noteDetails) {
       createdAt: result.createdAt,
       updatedAt: result.updatedAt,
       nearestCommentId: result.nearestCommentId,
+      noteVisibility: result.noteVisibility,
       userDetails
     };
 
@@ -122,7 +123,7 @@ async function getNotes(user, noteDetails) {
           { noteType },
           { $or: [{ userId }, { noteVisibility: true }] }
         ]
-      }).populate("userId author", "userName");
+      }).populate("userId", "userName avatarUrl githubId");
       const userDetails = { userName, avatarUrl, githubId };
 
       notes = notes.map(note => {
@@ -133,6 +134,7 @@ async function getNotes(user, noteDetails) {
           createdAt: note.createdAt,
           updatedAt: note.updatedAt,
           nearestCommentId: note.nearestCommentId,
+          noteVisibility: note.noteVisibility,
           userDetails
         };
       });
@@ -185,8 +187,37 @@ async function deleteNote(userId, noteDetails) {
     };
   }
 }
+
+async function editNote(userId, noteDetails) {
+  const { noteVisibility, noteId } = noteDetails;
+  if (!noteId) {
+    return {
+      status: 400,
+      message: "Note id is required"
+    };
+  }
+
+  try {
+    await Note.findOneAndUpdate(
+      { _id: mongoose.Types.ObjectId(noteId) },
+      { noteVisibility }
+    );
+
+    return {
+      status: 200,
+      message: "Note updated successfully"
+    };
+  } catch (err) {
+    return {
+      status: 401,
+      data: { error: err },
+      message: "Invalid note id"
+    };
+  }
+}
 export default {
   createNote,
   getNotes,
-  deleteNote
+  deleteNote,
+  editNote
 };
