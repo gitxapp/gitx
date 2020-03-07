@@ -1,8 +1,8 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
-import User from './user.model';
+import User from "./user.model";
 
-import Note from '../Note/note.model';
+import Note from "../Note/note.model";
 
 async function createUser(userDetails) {
   const user = new User(userDetails);
@@ -12,19 +12,19 @@ async function createUser(userDetails) {
     return {
       data: user,
       status: 200,
-      message: 'User created',
+      message: "User created"
     };
   } catch (err) {
-    if (err.name === 'MongoError' && err.code === 11000) {
+    if (err.name === "MongoError" && err.code === 11000) {
       return {
         status: 401,
-        message: 'Email Id already registered',
+        message: "Email Id already registered"
       };
     }
     return {
       status: 500,
-      message: 'User not created',
-      data: { error: err },
+      message: "User not created",
+      data: { error: err }
     };
   }
 }
@@ -38,7 +38,7 @@ async function createOrUpdate({
   location,
   bio,
   authParams,
-  accessToken,
+  accessToken
 }) {
   const userDetails = {
     userName,
@@ -49,31 +49,26 @@ async function createOrUpdate({
     location,
     bio,
     authParams,
-    accessToken,
+    accessToken
   };
   try {
-    console.log('User Details -->', userName, githubId, email);
-
     await User.update({ githubId }, userDetails, { upsert: true });
     const updatedUser = await User.findOne({ githubId });
-    console.log('Updated User -->', updatedUser);
 
     userDetails._id = updatedUser._id;
-    userDetails.expiresIn = '7d';
+    userDetails.expiresIn = "7d";
     userDetails.token = jwt.sign(userDetails, process.env.JWT_KEY);
 
     return {
       data: userDetails,
       status: 200,
-      message: 'Logged in',
+      message: "Logged in"
     };
   } catch (err) {
-    console.log('User upsert Error-->', err);
-
     return {
       status: 500,
-      message: 'User not created',
-      data: { error: err },
+      message: "User not created",
+      data: { error: err }
     };
   }
 }
@@ -81,7 +76,7 @@ async function createOrUpdate({
 async function getUsers() {
   try {
     const users = await User.find({}).select(
-      'userName name githubId email avatarUrl company location bio',
+      "userName name githubId email avatarUrl company location bio"
     );
     const notes = await Note.find({});
     return {
@@ -89,14 +84,14 @@ async function getUsers() {
       data: {
         totalUsers: users.length,
         totalNotes: notes.length,
-        allUsers: users,
-      },
+        allUsers: users
+      }
     };
   } catch (err) {
     return {
       status: 200,
-      message: 'Failed to fetch users',
-      data: { error: err },
+      message: "Failed to fetch users",
+      data: { error: err }
     };
   }
 }
@@ -104,5 +99,5 @@ async function getUsers() {
 export default {
   createUser,
   createOrUpdate,
-  getUsers,
+  getUsers
 };

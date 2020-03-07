@@ -109,13 +109,18 @@ async function getNotes(user, noteDetails) {
           { noteType },
           { $or: [{ userId }, { noteVisibility: true }] }
         ]
-      });
+      }).populate("userId author", "userName");
+      const userDetails = { userName, avatarUrl, githubId };
 
       notes = notes.map(note => {
         return {
-          ...note._doc,
+          _id: note._id,
           noteContent: converter.makeHtml(note.noteContent),
-          userId: { userName, avatarUrl, githubId }
+          author: note.userId,
+          createdAt: note.createdAt,
+          updatedAt: note.updatedAt,
+          nearestCommentId: note.nearestCommentId,
+          userDetails
         };
       });
     }
