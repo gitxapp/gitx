@@ -54,16 +54,6 @@ async function createNote(user, noteDetails) {
     userDetails
   });
 
-  const newlyCreatedNote = {
-    _id: note._id,
-    noteContent: converter.makeHtml(note.noteContent),
-    author: note.userId,
-    createdAt: note.createdAt,
-    updatedAt: note.updatedAt,
-    nearestCommentId: note.nearestCommentId,
-    userDetails
-  };
-
   if (!userId) {
     return {
       status: 400,
@@ -84,7 +74,18 @@ async function createNote(user, noteDetails) {
   }
 
   try {
-    await note.save();
+    const result = await note.save();
+
+    const newlyCreatedNote = {
+      _id: result._id,
+      noteContent: converter.makeHtml(result.noteContent),
+      author: result.userId,
+      createdAt: result.createdAt,
+      updatedAt: result.updatedAt,
+      nearestCommentId: result.nearestCommentId,
+      userDetails
+    };
+
     return {
       status: 200,
       data: newlyCreatedNote,
