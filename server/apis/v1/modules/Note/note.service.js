@@ -22,7 +22,9 @@ async function createNote(user, noteDetails) {
   } = noteDetails;
 
   let userHasAccessToRepo = false;
-  const { _id: userId, userName, accessToken } = user;
+  const { _id: userId, userName, accessToken, avatarUrl, githubId } = user;
+
+  const userDetails = { userName, avatarUrl, githubId };
 
   userHasAccessToRepo = await checkUserIsACollaborator({
     repoOwner,
@@ -48,10 +50,10 @@ async function createNote(user, noteDetails) {
     projectName,
     repoOwner,
     noteVisibility,
-    userId
+    userId,
+    userDetails
   });
 
-  note.noteContent = converter.makeHtml(note.noteContent);
   if (!userId) {
     return {
       status: 400,
@@ -72,10 +74,21 @@ async function createNote(user, noteDetails) {
   }
 
   try {
-    await note.save();
+    const result = await note.save();
+
+    const newlyCreatedNote = {
+      _id: result._id,
+      noteContent: converter.makeHtml(result.noteContent),
+      author: result.userId,
+      createdAt: result.createdAt,
+      updatedAt: result.updatedAt,
+      nearestCommentId: result.nearestCommentId,
+      userDetails
+    };
+
     return {
       status: 200,
-      data: note,
+      data: newlyCreatedNote,
       message: "Note created successfully"
     };
   } catch (err) {
