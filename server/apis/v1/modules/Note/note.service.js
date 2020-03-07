@@ -123,7 +123,7 @@ async function getNotes(user, noteDetails) {
           { noteType },
           { $or: [{ userId }, { noteVisibility: true }] }
         ]
-      }).populate("userId author", "userName");
+      }).populate("userId", "userName avatarUrl githubId");
       const userDetails = { userName, avatarUrl, githubId };
 
       notes = notes.map(note => {
