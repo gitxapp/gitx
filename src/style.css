@@ -28,3 +28,7 @@
   font-size: 11px;
   padding: 0.5em;
 }
+
+input.visible-to-all{
+  margin-left: 5px;
+}
