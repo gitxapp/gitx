@@ -4,7 +4,7 @@ const { Schema } = mongoose;
 
 const noteSchema = new Schema(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "User" },
+    userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
     projectName: {
       type: String,
       required: true
@@ -14,11 +14,15 @@ const noteSchema = new Schema(
       type: String,
       required: true
     }, // issue id or pull id
+    repoOwner: {
+      type: String,
+      required: true
+    }, // repo owner name
     repoOwnerType: {
       type: String,
       required: true
     }, // user or organization
-    noteVisiblity: {
+    noteVisibility: {
       type: Boolean,
       default: false
     },

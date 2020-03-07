@@ -33,11 +33,13 @@ export const findURLAttributes = ({ currentUrl }) => {
   const issueId = urlParams[urlParams.length - 1];
   const noteType = currentUrl.includes("issue") ? "issue" : "pull";
   const projectName = urlParams[urlParams.length - 3];
+  const repoOwner = urlParams[urlParams.length - 4];
 
   return {
     issueId,
     noteType,
-    projectName
+    projectName,
+    repoOwner
   };
 };
 export const checkUrlIsIssueOrPull = ({ URL }) => {
