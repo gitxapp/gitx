@@ -185,8 +185,37 @@ async function deleteNote(userId, noteDetails) {
     };
   }
 }
+
+async function editNote(userId, noteDetails) {
+  const { noteVisibility, noteId } = noteDetails;
+  if (!noteId) {
+    return {
+      status: 400,
+      message: "Note id is required"
+    };
+  }
+
+  try {
+    await Note.findOneAndUpdate(
+      { _id: mongoose.Types.ObjectId(noteId) },
+      { noteVisibility }
+    );
+
+    return {
+      status: 200,
+      message: "Note updated successfully"
+    };
+  } catch (err) {
+    return {
+      status: 401,
+      data: { error: err },
+      message: "Invalid note id"
+    };
+  }
+}
 export default {
   createNote,
   getNotes,
-  deleteNote
+  deleteNote,
+  editNote
 };
