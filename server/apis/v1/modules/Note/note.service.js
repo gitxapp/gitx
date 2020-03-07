@@ -54,7 +54,16 @@ async function createNote(user, noteDetails) {
     userDetails
   });
 
-  note.noteContent = converter.makeHtml(note.noteContent);
+  const newlyCreatedNote = {
+    _id: note._id,
+    noteContent: converter.makeHtml(note.noteContent),
+    author: note.userId,
+    createdAt: note.createdAt,
+    updatedAt: note.updatedAt,
+    nearestCommentId: note.nearestCommentId,
+    userDetails
+  };
+
   if (!userId) {
     return {
       status: 400,
@@ -78,7 +87,7 @@ async function createNote(user, noteDetails) {
     await note.save();
     return {
       status: 200,
-      data: note,
+      data: newlyCreatedNote,
       message: "Note created successfully"
     };
   } catch (err) {
