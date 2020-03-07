@@ -17,6 +17,8 @@ module.exports = {
     "arrow-parens": "off",
     "no-underscore-dangle": "off",
     quotes: "off",
-    "comma-dangle": "off"
+    "comma-dangle": "off",
+    "nonblock-statement-body-position": "off",
+    "object-curly-newline": "off"
   }
 };
