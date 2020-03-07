@@ -83,6 +83,7 @@ async function createNote(user, noteDetails) {
       createdAt: result.createdAt,
       updatedAt: result.updatedAt,
       nearestCommentId: result.nearestCommentId,
+      noteVisibility: result.noteVisibility,
       userDetails
     };
 
@@ -133,6 +134,7 @@ async function getNotes(user, noteDetails) {
           createdAt: note.createdAt,
           updatedAt: note.updatedAt,
           nearestCommentId: note.nearestCommentId,
+          noteVisibility: note.noteVisibility,
           userDetails
         };
       });
