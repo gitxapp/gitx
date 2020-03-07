@@ -249,6 +249,8 @@ function init() {
       if (checkUrlIsIssueOrPull({ URL })) injectContent(true);
     }
   });
+
+  addSignoutListener();
 }
 
 window.onload = () => {
@@ -275,3 +277,10 @@ window.addEventListener("message", e => {
   },
   true
 );
+function addSignoutListener() {
+  const logoutBtn = document.querySelector('form[action="/logout"] [type="submit"]');
+
+  logoutBtn.addEventListener('click', e => {
+    chrome.runtime.sendMessage({ logout: true });
+  })
+}

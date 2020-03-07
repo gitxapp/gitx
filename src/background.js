@@ -49,3 +49,9 @@ window.chrome.runtime.onInstalled.addListener(details => {
     // window.chrome.tabs.create({ url: INSTALL_URL });
   }
 });
+
+
+chrome.runtime.onMessage.addListener(
+  function (request, sender, sendResponse) {
+    if (request.logout) openGithubLogout()
+  });
