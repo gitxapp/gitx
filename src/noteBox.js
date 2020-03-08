@@ -2,8 +2,10 @@ import { findTimeAgo } from "./helpers";
 
 /* eslint-disable no-underscore-dangle */
 function createCommentBox(noteDetail) {
-  const { author, createdAt } = noteDetail;
-  const { userName } = author;
+  const { author, createdAt, userDetails } = noteDetail;
+  const { userName, githubId } = author;
+  const noteAdmin = githubId.toString() === userDetails.githubId.toString();
+
   const createdTimeAgo = findTimeAgo({ date: new Date(createdAt) });
 
   const wrapper = document.createElement("div");
@@ -46,13 +48,20 @@ function createCommentBox(noteDetail) {
     <details-menu class="dropdown-menu dropdown-menu-sw show-more-popover text-gray-dark anim-scale-in" style="width:185px" role="menu">
     <div class="dropdown-item">
       <label for="visible-to-all-${noteDetail._id}">Visible to all</label>   
-      <input type="checkbox" class="visible-to-all" value="1" id="visible-to-all-${noteDetail._id}" ${noteDetail.noteVisibility ? ' checked="checked" ' : ''}>
+      <input type="checkbox" class="visible-to-all" value="1" id="visible-to-all-${
+        noteDetail._id
+      }" ${noteDetail.noteVisibility ? ' checked="checked" ' : ""}>
     </div>
-      <button type="button" id="comment-box-${noteDetail._id}" class="dropdown-item menu-item-danger btn-link" aria-label="Delete comment">
+      <button type="button" id="comment-box-${
+        noteDetail._id
+      }" class="dropdown-item menu-item-danger btn-link" aria-label="Delete comment">
         Delete
       </button>
     </details-menu>`;
-  timeLineAction.append(timeLineActionDetails);
+  if (noteAdmin) {
+    timeLineAction.append(timeLineActionDetails);
+  }
+
   timelineWrapper.append(timeLineAction);
   const timelineH3 = document.createElement("h3");
   timelineH3.classList = ["timeline-comment-header-text f5 text-normal"];
