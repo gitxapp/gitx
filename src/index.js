@@ -265,9 +265,10 @@ function init() {
     } else {
       initUrlAttributes();
       if (checkUrlIsIssueOrPull({ URL })) injectContent(true);
-      addSignoutListener();
     }
   });
+  addSignoutListener();
+
 
 }
 
