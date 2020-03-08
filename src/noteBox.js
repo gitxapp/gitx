@@ -58,9 +58,8 @@ function createCommentBox(noteDetail) {
         Delete
       </button>
     </details-menu>`;
-  if (noteAdmin) {
-    timeLineAction.append(timeLineActionDetails);
-  }
+
+  timeLineAction.append(timeLineActionDetails);
 
   timelineWrapper.append(timeLineAction);
   const timelineH3 = document.createElement("h3");
@@ -96,6 +95,12 @@ function createCommentBox(noteDetail) {
   innerWrapper2.append(commentBodyWrapper);
   wrapper.append(innerWrapper1);
   wrapper.append(innerWrapper2);
+  if (!noteAdmin) {
+    wrapper.getElementsByClassName(
+      "btn-link timeline-comment-action"
+    )[0].style.visibility = "hidden";
+  }
+
   return wrapper;
 }
 
