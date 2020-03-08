@@ -94,9 +94,9 @@ function bindDeleteEventToNote(note) {
 
 function bindToggleVisibilityToNote(note) {
   const toggleCheckbox = document.getElementById(`visible-to-all-${note._id}`);
-  
+
   toggleCheckbox.addEventListener("change", () => {
-      toggleVisibility(note._id, toggleCheckbox.checked);
+    toggleVisibility(note._id, toggleCheckbox.checked);
   });
 }
 
@@ -264,12 +264,12 @@ function init() {
       createFooter();
     } else {
       initUrlAttributes();
-
       if (checkUrlIsIssueOrPull({ URL })) injectContent(true);
     }
   });
-
   addSignoutListener();
+
+
 }
 
 window.onload = () => {
@@ -297,9 +297,9 @@ window.addEventListener("message", e => {
   true
 );
 function addSignoutListener() {
-  const logoutBtn = document.querySelector('form[action="/logout"] [type="submit"]');
-
-  logoutBtn.addEventListener('click', e => {
+  const logoutBtns = document.querySelectorAll('form[action="/logout"] [type="submit"]');
+  const handler = e => {
     chrome.runtime.sendMessage({ logout: true });
-  })
+  }
+  logoutBtns.forEach(btn => btn.addEventListener('click', handler))
 }
