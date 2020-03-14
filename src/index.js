@@ -131,7 +131,7 @@ function createPrivateNoteAddButton() {
         repoOwner,
         noteVisibility: true,
       });
-
+      button.disabled = false;
       allNotes.push(newlyCreatedNote);
       while (
         nearestBox.nextElementSibling &&
