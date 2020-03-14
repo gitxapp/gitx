@@ -1,32 +1,32 @@
-import minAjax from "./ajax";
-import { URL, VERSION } from "./constants";
+import minAjax from './ajax';
+import { URL, VERSION } from './constants';
 
 export const getAllNotes = ({ issueId, projectName, noteType, repoOwner }) => {
   try {
     return new Promise(resolve => {
-      window.chrome.storage.sync.get(["githubPrivateCommentToken"], result => {
+      window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
         const authToken = result.githubPrivateCommentToken;
         minAjax({
           url: `${URL}${VERSION}/note/all`, // request URL
-          type: "POST",
+          type: 'POST',
           headers: [
             {
-              type: "Authorization",
-              value: `Bearer ${authToken}`
-            }
+              type: 'Authorization',
+              value: `Bearer ${authToken}`,
+            },
           ],
           data: {
             issueId,
             projectName,
             noteType,
-            repoOwner
+            repoOwner,
           },
           success(results) {
             // Retrieve all the notes based on issue id
             const formattedResults = JSON.parse(results);
             const allNotes = formattedResults.data;
             resolve(allNotes);
-          }
+          },
         });
       });
     });
@@ -42,20 +42,20 @@ export const createNote = ({
   nearestCommentId,
   projectName,
   repoOwner,
-  noteVisibility
+  noteVisibility,
 }) => {
   try {
-    return new Promise(resolve => {
-      window.chrome.storage.sync.get(["githubPrivateCommentToken"], result => {
+    return new Promise((resolve, reject) => {
+      window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
         const authToken = result.githubPrivateCommentToken;
         minAjax({
           url: `${URL}${VERSION}/note`, // request URL
-          type: "POST", // Request type GET/POST
+          type: 'POST', // Request type GET/POST
           headers: [
             {
-              type: "Authorization",
-              value: `Bearer ${authToken}`
-            }
+              type: 'Authorization',
+              value: `Bearer ${authToken}`,
+            },
           ],
           data: {
             noteContent,
@@ -64,55 +64,52 @@ export const createNote = ({
             nearestCommentId,
             projectName,
             repoOwner,
-            noteVisibility
+            noteVisibility,
+          },
+          errorCallback(e) {
+            reject(e);
           },
           success(results) {
             const formattedResult = JSON.parse(results);
 
             const newlyCreatedNote = formattedResult.data;
             resolve(newlyCreatedNote);
-          }
+          },
         });
       });
     });
   } catch (error) {
-    return null;
+    throw error;
   }
 };
 
 // eslint-disable-next-line
-export const removeNote = ({
-  noteId,
-  issueId,
-  projectName,
-  noteType,
-  repoOwner
-}) => {
+export const removeNote = ({ noteId, issueId, projectName, noteType, repoOwner }) => {
   try {
     return new Promise(resolve => {
-      window.chrome.storage.sync.get(["githubPrivateCommentToken"], result => {
+      window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
         const authToken = result.githubPrivateCommentToken;
         minAjax({
           url: `${URL}${VERSION}/note/delete`, // request URL
-          type: "POST", // Request type GET/POST
+          type: 'POST', // Request type GET/POST
           headers: [
             {
-              type: "Authorization",
-              value: `Bearer ${authToken}`
-            }
+              type: 'Authorization',
+              value: `Bearer ${authToken}`,
+            },
           ],
           data: {
             issueId,
             projectName,
             noteType,
             noteId,
-            repoOwner
+            repoOwner,
           },
           success(results) {
             const formattedResult = JSON.parse(results);
             const deletedNote = formattedResult.data;
             resolve(deletedNote);
-          }
+          },
         });
       });
     });
@@ -121,36 +118,30 @@ export const removeNote = ({
   }
 };
 
-
-
-
 // eslint-disable-next-line
-export const toggleVisibilityApi = ({
-  noteId,
-  noteVisibility
-}) => {
+export const toggleVisibilityApi = ({ noteId, noteVisibility }) => {
   try {
     return new Promise(resolve => {
-      window.chrome.storage.sync.get(["githubPrivateCommentToken"], result => {
+      window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
         const authToken = result.githubPrivateCommentToken;
         minAjax({
           url: `${URL}${VERSION}/note/edit`, // request URL
-          type: "POST", // Request type GET/POST
+          type: 'POST', // Request type GET/POST
           headers: [
             {
-              type: "Authorization",
-              value: `Bearer ${authToken}`
-            }
+              type: 'Authorization',
+              value: `Bearer ${authToken}`,
+            },
           ],
           data: {
             noteId,
-            noteVisibility
+            noteVisibility,
           },
           success(results) {
             const formattedResult = JSON.parse(results);
             const updatedNote = formattedResult.data;
             resolve(updatedNote);
-          }
+          },
         });
       });
     });

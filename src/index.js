@@ -145,7 +145,8 @@ function createPrivateNoteAddButton() {
 
       textArea.value = '';
     } catch (error) {
-      console.log('Add note error:', error);
+      window.alert(error.message);
+      button.disabled = false;
     }
   };
   const pvtNoteBtn = document.getElementById('add_private_note_button');
