@@ -55,13 +55,11 @@ function minAjax(config) {
 
       if (config.debugLog == true) console.log('SuccessResponse');
       if (config.debugLog == true) console.log(`Response Data:${xmlhttp.responseText}`);
-    } else {
-      if (config.debugLog == true)
-        console.log(`FailureResponse --> State:${xmlhttp.readyState}Status:${xmlhttp.status}`);
-
+    } else if (config.debugLog == true) {
+      console.log(`FailureResponse --> State:${xmlhttp.readyState}Status:${xmlhttp.status}`);
+    } else if (xmlhttp.readyState === 3 && xmlhttp.status === 400) {
       if (config.errorCallback) {
-        console.log('Calling Error Callback');
-        config.errorCallback();
+        config.errorCallback(JSON.parse(xmlhttp.responseText));
       }
     }
   };

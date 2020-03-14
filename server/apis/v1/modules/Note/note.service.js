@@ -1,12 +1,9 @@
-import mongoose from "mongoose";
-import showdown from "showdown";
+import mongoose from 'mongoose';
+import showdown from 'showdown';
 
-import Note from "./note.model";
+import Note from './note.model';
 
-import {
-  getRepoOwnerType,
-  checkUserIsACollaborator
-} from "../../../../utils/githubapi";
+import { getRepoOwnerType, checkUserIsACollaborator } from '../../../../utils/githubapi';
 
 const converter = new showdown.Converter();
 
@@ -18,7 +15,7 @@ async function createNote(user, noteDetails) {
     projectName,
     repoOwner,
     noteVisibility,
-    nearestCommentId
+    nearestCommentId,
   } = noteDetails;
 
   let userHasAccessToRepo = false;
@@ -30,12 +27,12 @@ async function createNote(user, noteDetails) {
     repoOwner,
     projectName,
     userName,
-    accessToken
+    accessToken,
   });
   if (!userHasAccessToRepo) {
     return {
       status: 400,
-      message: "You don't have authorization to create the private note"
+      message: 'You cannot add private notes to this repository since you are not a contributor',
     };
   }
 
@@ -51,25 +48,25 @@ async function createNote(user, noteDetails) {
     repoOwner,
     noteVisibility,
     userId,
-    userDetails
+    userDetails,
   });
 
   if (!userId) {
     return {
       status: 400,
-      message: "User id is required"
+      message: 'User id is required',
     };
   }
   if (!issueId) {
     return {
       status: 400,
-      message: "Issue id or Pull id is required"
+      message: 'Issue id or Pull id is required',
     };
   }
   if (!projectName) {
     return {
       status: 400,
-      message: "Project name is required"
+      message: 'Project name is required',
     };
   }
 
@@ -84,19 +81,19 @@ async function createNote(user, noteDetails) {
       updatedAt: result.updatedAt,
       nearestCommentId: result.nearestCommentId,
       noteVisibility: result.noteVisibility,
-      userDetails
+      userDetails,
     };
 
     return {
       status: 200,
       data: newlyCreatedNote,
-      message: "Note created successfully"
+      message: 'Note created successfully',
     };
   } catch (err) {
     return {
       status: 401,
       data: { error: err },
-      message: "Note not created"
+      message: 'Note not created',
     };
   }
 }
@@ -112,7 +109,7 @@ async function getNotes(user, noteDetails) {
       repoOwner,
       projectName,
       userName,
-      accessToken
+      accessToken,
     });
 
     if (userHasAccessToRepo) {
@@ -121,35 +118,33 @@ async function getNotes(user, noteDetails) {
           { issueId },
           { projectName },
           { noteType },
-          { $or: [{ userId }, { noteVisibility: true }] }
-        ]
-      }).populate("userId", "userName avatarUrl githubId");
+          { $or: [{ userId }, { noteVisibility: true }] },
+        ],
+      }).populate('userId', 'userName avatarUrl githubId');
       const userDetails = { userName, avatarUrl, githubId };
 
-      notes = notes.map(note => {
-        return {
-          _id: note._id,
-          noteContent: converter.makeHtml(note.noteContent),
-          author: note.userId,
-          createdAt: note.createdAt,
-          updatedAt: note.updatedAt,
-          nearestCommentId: note.nearestCommentId,
-          noteVisibility: note.noteVisibility,
-          userDetails
-        };
-      });
+      notes = notes.map(note => ({
+        _id: note._id,
+        noteContent: converter.makeHtml(note.noteContent),
+        author: note.userId,
+        createdAt: note.createdAt,
+        updatedAt: note.updatedAt,
+        nearestCommentId: note.nearestCommentId,
+        noteVisibility: note.noteVisibility,
+        userDetails,
+      }));
     }
 
     return {
       status: 200,
-      message: "Fetched notes",
-      data: notes
+      message: 'Fetched notes',
+      data: notes,
     };
   } catch (err) {
     return {
       status: 200,
-      message: "Failed to fetch notes",
-      data: { error: err }
+      message: 'Failed to fetch notes',
+      data: { error: err },
     };
   }
 }
@@ -159,7 +154,7 @@ async function deleteNote(userId, noteDetails) {
   if (!noteId) {
     return {
       status: 400,
-      message: "Note id is required"
+      message: 'Note id is required',
     };
   }
 
@@ -170,20 +165,20 @@ async function deleteNote(userId, noteDetails) {
         { userId },
         { issueId },
         { projectName },
-        { noteType }
-      ]
-    }).populate("userId", "userName avatarUrl githubId");
+        { noteType },
+      ],
+    }).populate('userId', 'userName avatarUrl githubId');
     if (note) note.remove();
     return {
       status: 200,
       data: note,
-      message: "Note removed successfully"
+      message: 'Note removed successfully',
     };
   } catch (err) {
     return {
       status: 401,
       data: { error: err },
-      message: "Invalid note id"
+      message: 'Invalid note id',
     };
   }
 }
@@ -193,25 +188,22 @@ async function editNote(userId, noteDetails) {
   if (!noteId) {
     return {
       status: 400,
-      message: "Note id is required"
+      message: 'Note id is required',
     };
   }
 
   try {
-    await Note.findOneAndUpdate(
-      { _id: mongoose.Types.ObjectId(noteId) },
-      { noteVisibility }
-    );
+    await Note.findOneAndUpdate({ _id: mongoose.Types.ObjectId(noteId) }, { noteVisibility });
 
     return {
       status: 200,
-      message: "Note updated successfully"
+      message: 'Note updated successfully',
     };
   } catch (err) {
     return {
       status: 401,
       data: { error: err },
-      message: "Invalid note id"
+      message: 'Invalid note id',
     };
   }
 }
@@ -219,5 +211,5 @@ export default {
   createNote,
   getNotes,
   deleteNote,
-  editNote
+  editNote,
 };
