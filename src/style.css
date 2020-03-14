@@ -28,3 +28,15 @@
   font-size: 11px;
   padding: 0.5em;
 }
+
+input.visible-to-all {
+  margin-left: 5px;
+}
+
+label.visible-to-all-text {
+  font-weight: 400 !important;
+}
+
+div.dropdown-item {
+  overflow: visible;
+}

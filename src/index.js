@@ -2,7 +2,7 @@
 // Could break if GitHub changes its markup
 import createNoteBox from './noteBox';
 import createFooter from './footer';
-import { getAllNotes, removeNote, createNote } from './api';
+import { getAllNotes, removeNote, createNote, toggleVisibilityApi } from './api';
 import { findURLAttributes, checkUrlIsIssueOrPull } from './helpers';
 import './style.css';
 
@@ -45,7 +45,7 @@ function initInputArea() {
 }
 
 async function deleteNote(noteId) {
-  const { issueId, noteType, projectName } = urlAttributes;
+  const { issueId, noteType, projectName, repoOwner } = urlAttributes;
 
   try {
     await removeNote({
@@ -53,6 +53,7 @@ async function deleteNote(noteId) {
       noteType,
       issueId,
       projectName,
+      repoOwner,
     });
 
     // Remove deleted note from dom
@@ -68,6 +69,14 @@ async function deleteNote(noteId) {
   }
 }
 
+async function toggleVisibility(noteId, noteVisibility) {
+  try {
+    await toggleVisibilityApi({ noteId, noteVisibility });
+  } catch (error) {
+    console.log('Toggle visibility note error:', error);
+  }
+}
+
 function bindDeleteEventToNote(note) {
   const deleteBox = document.getElementById(`comment-box-${note._id}`);
 
@@ -77,6 +86,14 @@ function bindDeleteEventToNote(note) {
     if (answer) {
       deleteNote(note._id);
     }
+  });
+}
+
+function bindToggleVisibilityToNote(note) {
+  const toggleCheckbox = document.getElementById(`visible-to-all-${note._id}`);
+
+  toggleCheckbox.addEventListener('change', () => {
+    toggleVisibility(note._id, toggleCheckbox.checked);
   });
 }
 
@@ -103,7 +120,7 @@ function createPrivateNoteAddButton() {
     nearestCommentId = nearestBox.getAttribute('data-gid');
 
     try {
-      const { issueId, noteType, projectName } = urlAttributes;
+      const { issueId, noteType, projectName, repoOwner } = urlAttributes;
 
       const newlyCreatedNote = await createNote({
         noteContent,
@@ -111,6 +128,8 @@ function createPrivateNoteAddButton() {
         issueId,
         nearestCommentId,
         projectName,
+        repoOwner,
+        noteVisibility: true,
       });
 
       allNotes.push(newlyCreatedNote);
@@ -122,6 +141,7 @@ function createPrivateNoteAddButton() {
       }
       nearestBox.after(createNoteBox(allNotes[allNotes.length - 1]));
       bindDeleteEventToNote(newlyCreatedNote);
+      bindToggleVisibilityToNote(newlyCreatedNote);
 
       textArea.value = '';
     } catch (error) {
@@ -166,9 +186,7 @@ async function injectContent(apiCall) {
   // similar comments hide the gitex comments so opening the collapsible similar comments
   const collapsed = document.querySelectorAll('.Details-element.details-reset');
   collapsed.forEach(el => {
-    if (el) {
-      el.setAttribute('open', true);
-    }
+    el.setAttribute('open', true);
   });
   if (positionMarker) {
     const makeANoteBtn = createPrivateNoteAddButton();
@@ -179,13 +197,14 @@ async function injectContent(apiCall) {
       return;
     }
     try {
-      const { issueId, noteType, projectName } = urlAttributes;
+      const { issueId, noteType, projectName, repoOwner } = urlAttributes;
 
       // Load all the notes based on issue id
       allNotes = await getAllNotes({
         issueId,
         projectName,
         noteType,
+        repoOwner,
       });
       if (allNotes.length) {
         // Iterate all the comments and append notes
@@ -199,7 +218,7 @@ async function injectContent(apiCall) {
           const findNotesNearestToComment = obj => obj.nearestCommentId === commentId;
           const notesNearestToCommentBox = allNotes.filter(findNotesNearestToComment);
           const sortedNotes = notesNearestToCommentBox.sort(
-            (a, b) => new Date(b.updatedAt) - new Date(a.updatedAt),
+            (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
           );
           sortedNotes.forEach(element => {
             const { _id: noteId } = element;
@@ -208,6 +227,7 @@ async function injectContent(apiCall) {
               commentBox.after(createNoteBox(element));
               if (commentBox) {
                 bindDeleteEventToNote(element);
+                bindToggleVisibilityToNote(element);
               }
             }
           });
@@ -220,6 +240,9 @@ async function injectContent(apiCall) {
 }
 
 function init() {
+  const {
+    location: { href: URL },
+  } = document;
   window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
     const authToken = result.githubPrivateCommentToken;
 
@@ -227,9 +250,10 @@ function init() {
       createFooter();
     } else {
       initUrlAttributes();
-      injectContent(true);
+      if (checkUrlIsIssueOrPull({ URL })) injectContent(true);
     }
   });
+  addSignoutListener();
 }
 
 window.onload = () => {
@@ -256,3 +280,10 @@ window.addEventListener('message', e => {
   },
   true,
 );
+function addSignoutListener() {
+  const logoutBtns = document.querySelectorAll('form[action="/logout"] [type="submit"]');
+  const handler = e => {
+    chrome.runtime.sendMessage({ logout: true });
+  };
+  logoutBtns.forEach(btn => btn.addEventListener('click', handler));
+}
