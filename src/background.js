@@ -43,15 +43,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   checkForAuth();
 });
-// window.chrome.runtime.setUninstallURL(UN_INSTALL_URL);
+window.chrome.runtime.setUninstallURL(UN_INSTALL_URL);
 window.chrome.runtime.onInstalled.addListener(details => {
   if (details.reason === "install") {
-    // window.chrome.tabs.create({ url: INSTALL_URL });
+    window.chrome.tabs.create({ url: INSTALL_URL });
   }
 });
 
-
-chrome.runtime.onMessage.addListener(
-  function (request, sender, sendResponse) {
-    if (request.logout) openGithubLogout()
-  });
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  if (request.logout) openGithubLogout();
+});

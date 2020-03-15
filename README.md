@@ -11,6 +11,13 @@
   Built with ❤︎  
 </div>
 
+<p align="center">
+  <img src="https://img.shields.io/github/commit-activity/m/gitxapp/gitx" alt="Commits-per-month">
+  <a href="http://makeapullrequest.com"><img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="PR-Welcome"></a>
+  <img src="https://img.shields.io/github/license/gitxapp/gitx" alt="License">
+ 
+</p>
+
 ## Getting started
 
 #### Clone the project
@@ -88,6 +95,8 @@ yarn client
 # Click on "Load unpacked" button and upload the build folder
 ```
 
-## License
+## Feedback & Contributing
 
-MIT
+Feel free to send us feedback on [Twitter](https://twitter.com/GitXApp) or [file an issue](https://github.com/gitxapp/gitx/issues).
+
+_Gitxapp_ &copy; 2019-2020 - Released under the MIT License.
