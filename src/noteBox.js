@@ -64,7 +64,7 @@ function createCommentBox(noteDetail) {
   timelineWrapper.append(timeLineAction);
   const timelineH3 = document.createElement('h3');
   timelineH3.classList = ['timeline-comment-header-text f5 text-normal'];
-  timelineH3.innerHTML = `<strong class=“css-truncate”><a class=“author link-gray-dark css-truncate-target width-fit” show_full_name=“false” data-hovercard-type=“user” data-hovercard-url=“/users/${userName}/hovercard” data-octo-click=“hovercard-link-click” data-octo-dimensions=“link_type:self” href=“/${userName}“>${userName}</a></strong>`;
+  timelineH3.innerHTML = `<strong class=“css-truncate”><a class="author link-gray-dark text-bold" data-hovercard-type="user" data-hovercard-url="/users/${userName}/hovercard" data-octo-click="hovercard-link-click" data-octo-dimensions="link_type:self" href="/${userName}">${userName}</a></strong>`;
   const timestamp = document.createElement('span');
   timestamp.classList = ['timestamp js-timestamp'];
 
