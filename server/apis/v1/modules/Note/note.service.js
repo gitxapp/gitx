@@ -32,7 +32,7 @@ async function createNote(user, noteDetails) {
   if (!userHasAccessToRepo) {
     return {
       status: 400,
-      message: 'You cannot add private notes to this repository since you are not a contributor',
+      message: 'You cannot add private notes to this repository since you are not a collaborator',
     };
   }
 

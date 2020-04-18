@@ -35,10 +35,10 @@ function onInputValueChange(e) {
 function initInputArea() {
   const textArea = document.getElementById('new_comment_field');
   if (textArea) {
-    textArea.addEventListener('change', e => {
+    textArea.addEventListener('change', (e) => {
       onInputValueChange(e);
     });
-    textArea.addEventListener('input', e => {
+    textArea.addEventListener('input', (e) => {
       onInputValueChange(e);
     });
   }
@@ -58,7 +58,7 @@ async function deleteNote(noteId) {
 
     // Remove deleted note from dom
     const commentBoxes = document.querySelectorAll('.private-note');
-    commentBoxes.forEach(commentBox => {
+    commentBoxes.forEach((commentBox) => {
       const commentBoxPrivateId = commentBox.getAttribute('private-id');
       if (commentBoxPrivateId === noteId) {
         commentBox.remove();
@@ -111,13 +111,27 @@ function createPrivateNoteAddButton() {
   button.disabled = textArea && !textArea.value;
   button.onclick = async () => {
     button.disabled = true;
-    const commentBoxes = document.querySelectorAll(
+    let commentBoxes = document.querySelectorAll(
       '[data-gid]:not([id]):not(.merge-status-list-wrapper).js-timeline-item',
     );
+    let extraClass = '';
+    let isDiscussionBox = false;
+    if (commentBoxes.length === 0) {
+      commentBoxes = document.querySelectorAll('.js-discussion');
+      if (commentBoxes.length) {
+        extraClass = 'ml-0 pl-0 ml-md-6 pl-md-3';
+        isDiscussionBox = true;
+      }
+    }
     const commentBoxCount = commentBoxes.length;
     // Find nearest comment id
     let nearestBox = commentBoxes[commentBoxCount - 1];
-    nearestCommentId = nearestBox.getAttribute('data-gid');
+    if (isDiscussionBox) {
+      const box = nearestBox.firstElementChild;
+      nearestCommentId = box.getAttribute('data-gid');
+    } else {
+      nearestCommentId = nearestBox.getAttribute('data-gid');
+    }
 
     try {
       const { issueId, noteType, projectName, repoOwner } = urlAttributes;
@@ -139,7 +153,7 @@ function createPrivateNoteAddButton() {
       ) {
         nearestBox = nearestBox.nextSibling;
       }
-      nearestBox.after(createNoteBox(allNotes[allNotes.length - 1]));
+      nearestBox.after(createNoteBox(allNotes[allNotes.length - 1], extraClass));
       bindDeleteEventToNote(newlyCreatedNote);
       bindToggleVisibilityToNote(newlyCreatedNote);
 
@@ -161,7 +175,7 @@ async function injectContent(apiCall) {
   const actionBtns = document.querySelector('#partial-new-comment-form-actions > div');
   let commentBtn = {};
   if (actionBtns) {
-    [].forEach.call(actionBtns.children, btn => {
+    [].forEach.call(actionBtns.children, (btn) => {
       if (btn.children.length && btn.children[0] && btn.children[0].innerText === 'Comment') {
         commentBtn = btn;
       }
@@ -186,7 +200,7 @@ async function injectContent(apiCall) {
   const positionMarker = document.getElementById('partial-new-comment-form-actions');
   // similar comments hide the gitex comments so opening the collapsible similar comments
   const collapsed = document.querySelectorAll('.Details-element.details-reset');
-  collapsed.forEach(el => {
+  collapsed.forEach((el) => {
     el.setAttribute('open', true);
   });
   if (positionMarker) {
@@ -209,23 +223,29 @@ async function injectContent(apiCall) {
       });
       if (allNotes.length) {
         // Iterate all the comments and append notes
-        const commentBoxes = document.querySelectorAll(
+        let commentBoxes = document.querySelectorAll(
           '[data-gid]:not([id]):not(.merge-status-list-wrapper)',
         );
-
-        commentBoxes.forEach(commentBox => {
+        let extraClass = '';
+        if (commentBoxes.length === 0) {
+          commentBoxes = document.querySelectorAll('.js-discussion');
+          if (commentBoxes.length) {
+            extraClass = 'ml-0 pl-0 ml-md-6 pl-md-3';
+          }
+        }
+        commentBoxes.forEach((commentBox) => {
           const commentId = commentBox.getAttribute('data-gid');
 
-          const findNotesNearestToComment = obj => obj.nearestCommentId === commentId;
+          const findNotesNearestToComment = (obj) => obj.nearestCommentId === commentId;
           const notesNearestToCommentBox = allNotes.filter(findNotesNearestToComment);
           const sortedNotes = notesNearestToCommentBox.sort(
             (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
           );
-          sortedNotes.forEach(element => {
+          sortedNotes.forEach((element) => {
             const { _id: noteId } = element;
             if (!addedNoteIds.includes(noteId)) {
               addedNoteIds.push(noteId);
-              commentBox.after(createNoteBox(element));
+              commentBox.after(createNoteBox(element, extraClass));
               if (commentBox) {
                 bindDeleteEventToNote(element);
                 bindToggleVisibilityToNote(element);
@@ -244,7 +264,7 @@ function init() {
   const {
     location: { href: URL },
   } = document;
-  window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
+  window.chrome.storage.sync.get(['githubPrivateCommentToken'], (result) => {
     const authToken = result.githubPrivateCommentToken;
 
     if (!authToken) {
@@ -261,7 +281,7 @@ window.onload = () => {
   init();
 };
 
-window.addEventListener('message', e => {
+window.addEventListener('message', (e) => {
   if (e.data && e.data.type === 'githubPrivateCommentToken') {
     window.chrome.storage.sync.set({ githubPrivateCommentToken: e.data.value });
   }
@@ -283,8 +303,8 @@ window.addEventListener('message', e => {
 );
 function addSignoutListener() {
   const logoutBtns = document.querySelectorAll('form[action="/logout"] [type="submit"]');
-  const handler = e => {
+  const handler = (e) => {
     chrome.runtime.sendMessage({ logout: true });
   };
-  logoutBtns.forEach(btn => btn.addEventListener('click', handler));
+  logoutBtns.forEach((btn) => btn.addEventListener('click', handler));
 }

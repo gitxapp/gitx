@@ -128,13 +128,15 @@ function createAvatar({ userName, githubId, avatarUrl }) {
   return avatarWrapper;
 }
 
-export default function createNoteBox(noteDetail) {
+export default function createNoteBox(noteDetail, extraClass) {
   if (!noteDetail.author) {
     noteDetail.author = {};
   }
   const { avatarUrl, githubId, userName } = noteDetail.author;
   const noteNode = document.createElement('div');
-  noteNode.classList = ['js-timeline-item js-timeline-progressive-focus-container private-note'];
+  noteNode.classList = [
+    `js-timeline-item js-timeline-progressive-focus-container private-note  ${extraClass}`,
+  ];
   noteNode.setAttribute('private-id', noteDetail._id);
 
   const noteWrapper = document.createElement('div');
