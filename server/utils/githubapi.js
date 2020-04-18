@@ -11,6 +11,7 @@ const getRepoOwnerType = async ({ repoOwner }) => {
       return REPO_OWNER_TYPES.ORGANIZATION;
     }
   } catch (e) {
+    console.log('getRepoOwnerType error', e);
     const { response } = e;
 
     if (response) {
@@ -27,7 +28,7 @@ const checkUserIsACollaborator = async ({
   userName,
   accessToken
 }) => {
-  if (!repoOwner && !projectName & !userName) {
+  if (!repoOwner && !projectName && !userName) {
     throw Error("Repo name, project name and user name are required");
   }
 
@@ -40,6 +41,8 @@ const checkUserIsACollaborator = async ({
 
     return true;
   } catch (e) {
+    console.log('checkUserIsACollaborator error', e);
+    
     return false;
   }
 };
