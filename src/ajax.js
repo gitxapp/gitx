@@ -48,14 +48,14 @@ function minAjax(config) {
   const xmlhttp = initXMLhttp();
 
   xmlhttp.onreadystatechange = () => {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+    if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
       if (config.success) {
         config.success(xmlhttp.responseText, xmlhttp.readyState);
       }
 
-      if (config.debugLog == true) console.log('SuccessResponse');
-      if (config.debugLog == true) console.log(`Response Data:${xmlhttp.responseText}`);
-    } else if (config.debugLog == true) {
+      if (config.debugLog === true) console.log('SuccessResponse');
+      if (config.debugLog === true) console.log(`Response Data:${xmlhttp.responseText}`);
+    } else if (config.debugLog === true) {
       console.log(`FailureResponse --> State:${xmlhttp.readyState}Status:${xmlhttp.status}`);
     } else if (xmlhttp.readyState === 3 && xmlhttp.status === 400) {
       if (config.errorCallback) {
