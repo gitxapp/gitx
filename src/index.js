@@ -274,7 +274,7 @@ function init() {
       if (checkUrlIsIssueOrPull({ URL })) injectContent(true);
     }
   });
-  addSignoutListener();
+  addSignOutListener();
 }
 
 window.onload = () => {
@@ -301,7 +301,7 @@ window.addEventListener('message', (e) => {
   },
   true,
 );
-function addSignoutListener() {
+function addSignOutListener() {
   const logoutBtns = document.querySelectorAll('form[action="/logout"] [type="submit"]');
   const handler = (e) => {
     chrome.runtime.sendMessage({ logout: true });

@@ -1,9 +1,12 @@
-import mongoose from 'mongoose';
-import showdown from 'showdown';
+import mongoose from "mongoose";
+import showdown from "showdown";
 
-import Note from './note.model';
+import Note from "./note.model";
 
-import { getRepoOwnerType, checkUserIsACollaborator } from '../../../../utils/githubapi';
+import {
+  getRepoOwnerType,
+  checkUserIsACollaborator,
+} from "../../../../utils/githubapi";
 
 const converter = new showdown.Converter();
 
@@ -29,10 +32,12 @@ async function createNote(user, noteDetails) {
     userName,
     accessToken,
   });
+
   if (!userHasAccessToRepo) {
     return {
       status: 400,
-      message: 'You cannot add private notes to this repository since you are not a collaborator',
+      message:
+        "You cannot add private notes to this repository since you are not a actual collaborator",
     };
   }
 
@@ -54,19 +59,19 @@ async function createNote(user, noteDetails) {
   if (!userId) {
     return {
       status: 400,
-      message: 'User id is required',
+      message: "User id is required",
     };
   }
   if (!issueId) {
     return {
       status: 400,
-      message: 'Issue id or Pull id is required',
+      message: "Issue id or Pull id is required",
     };
   }
   if (!projectName) {
     return {
       status: 400,
-      message: 'Project name is required',
+      message: "Project name is required",
     };
   }
 
@@ -87,13 +92,13 @@ async function createNote(user, noteDetails) {
     return {
       status: 200,
       data: newlyCreatedNote,
-      message: 'Note created successfully',
+      message: "Note created successfully",
     };
   } catch (err) {
     return {
       status: 401,
       data: { error: err },
-      message: 'Note not created',
+      message: "Note not created",
     };
   }
 }
@@ -120,10 +125,10 @@ async function getNotes(user, noteDetails) {
           { noteType },
           { $or: [{ userId }, { noteVisibility: true }] },
         ],
-      }).populate('userId', 'userName avatarUrl githubId');
+      }).populate("userId", "userName avatarUrl githubId");
       const userDetails = { userName, avatarUrl, githubId };
 
-      notes = notes.map(note => ({
+      notes = notes.map((note) => ({
         _id: note._id,
         noteContent: converter.makeHtml(note.noteContent),
         author: note.userId,
@@ -137,13 +142,13 @@ async function getNotes(user, noteDetails) {
 
     return {
       status: 200,
-      message: 'Fetched notes',
+      message: "Fetched notes",
       data: notes,
     };
   } catch (err) {
     return {
       status: 200,
-      message: 'Failed to fetch notes',
+      message: "Failed to fetch notes",
       data: { error: err },
     };
   }
@@ -154,7 +159,7 @@ async function deleteNote(userId, noteDetails) {
   if (!noteId) {
     return {
       status: 400,
-      message: 'Note id is required',
+      message: "Note id is required",
     };
   }
 
@@ -167,18 +172,18 @@ async function deleteNote(userId, noteDetails) {
         { projectName },
         { noteType },
       ],
-    }).populate('userId', 'userName avatarUrl githubId');
+    }).populate("userId", "userName avatarUrl githubId");
     if (note) note.remove();
     return {
       status: 200,
       data: note,
-      message: 'Note removed successfully',
+      message: "Note removed successfully",
     };
   } catch (err) {
     return {
       status: 401,
       data: { error: err },
-      message: 'Invalid note id',
+      message: "Invalid note id",
     };
   }
 }
@@ -188,22 +193,25 @@ async function editNote(userId, noteDetails) {
   if (!noteId) {
     return {
       status: 400,
-      message: 'Note id is required',
+      message: "Note id is required",
     };
   }
 
   try {
-    await Note.findOneAndUpdate({ _id: mongoose.Types.ObjectId(noteId) }, { noteVisibility });
+    await Note.findOneAndUpdate(
+      { _id: mongoose.Types.ObjectId(noteId) },
+      { noteVisibility }
+    );
 
     return {
       status: 200,
-      message: 'Note updated successfully',
+      message: "Note updated successfully",
     };
   } catch (err) {
     return {
       status: 401,
       data: { error: err },
-      message: 'Invalid note id',
+      message: "Invalid note id",
     };
   }
 }

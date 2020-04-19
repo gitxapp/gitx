@@ -48,19 +48,24 @@ function minAjax(config) {
   const xmlhttp = initXMLhttp();
 
   xmlhttp.onreadystatechange = () => {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+    if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
       if (config.success) {
         config.success(xmlhttp.responseText, xmlhttp.readyState);
       }
 
-      if (config.debugLog == true) console.log('SuccessResponse');
-      if (config.debugLog == true) console.log(`Response Data:${xmlhttp.responseText}`);
-    } else if (config.debugLog == true) {
+      if (config.debugLog === true) console.log('SuccessResponse');
+      if (config.debugLog === true) console.log(`Response Data:${xmlhttp.responseText}`);
+    } else if (config.debugLog === true) {
       console.log(`FailureResponse --> State:${xmlhttp.readyState}Status:${xmlhttp.status}`);
     } else if (xmlhttp.readyState === 3 && xmlhttp.status === 400) {
       if (config.errorCallback) {
         config.errorCallback(JSON.parse(xmlhttp.responseText));
       }
+    } else if (xmlhttp.readyState === 3 && xmlhttp.status === 401) {
+      const error = JSON.parse(xmlhttp.responseText);
+      window.alert(error.message);
+      window.location.reload();
+      chrome.runtime.sendMessage({ logout: true });
     }
   };
 
@@ -93,7 +98,7 @@ function minAjax(config) {
   if (config.type === 'GET') {
     xmlhttp.open('GET', `${config.url}?${sendString}`, config.method);
     if (config.headers && config.headers.length) {
-      config.headers.map(header => {
+      config.headers.map((header) => {
         xmlhttp.setRequestHeader(header.type, header.value);
       });
     }
@@ -105,7 +110,7 @@ function minAjax(config) {
     xmlhttp.open('POST', config.url, config.method);
     xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     if (config.headers && config.headers.length) {
-      config.headers.map(header => {
+      config.headers.map((header) => {
         xmlhttp.setRequestHeader(header.type, header.value);
       });
     }

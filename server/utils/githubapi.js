@@ -11,13 +11,12 @@ const getRepoOwnerType = async ({ repoOwner }) => {
       return REPO_OWNER_TYPES.ORGANIZATION;
     }
   } catch (e) {
-    console.log('getRepoOwnerType error', e);
     const { response } = e;
 
     if (response) {
       return REPO_OWNER_TYPES.USER;
     }
-
+    console.log("Get repo owner type error", e);
     throw Error("Internal error");
   }
 };
@@ -26,7 +25,7 @@ const checkUserIsACollaborator = async ({
   repoOwner,
   projectName,
   userName,
-  accessToken
+  accessToken,
 }) => {
   if (!repoOwner && !projectName && !userName) {
     throw Error("Repo name, project name and user name are required");
@@ -36,15 +35,26 @@ const checkUserIsACollaborator = async ({
 
   try {
     await axios.get(apiUrl, {
-      headers: { Authorization: `token ${accessToken}` }
+      headers: { Authorization: `token ${accessToken}` },
     });
 
     return true;
-  } catch (e) {
-    console.log('checkUserIsACollaborator error', e);
-    
+  } catch (error) {
     return false;
   }
 };
 
-export { getRepoOwnerType, checkUserIsACollaborator };
+const checkTokenExpiredOrNot = async ({ accessToken }) => {
+  const apiUrl = `${process.env.GITHUB_API_URL}user`;
+
+  try {
+    await axios.get(apiUrl, {
+      headers: { Authorization: `token ${accessToken}` },
+    });
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
+
+export { getRepoOwnerType, checkUserIsACollaborator, checkTokenExpiredOrNot };
