@@ -3,8 +3,8 @@ import { URL, VERSION } from './constants';
 
 export const getAllNotes = ({ issueId, projectName, noteType, repoOwner }) => {
   try {
-    return new Promise(resolve => {
-      window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
+    return new Promise((resolve, reject) => {
+      window.chrome.storage.sync.get(['githubPrivateCommentToken'], (result) => {
         const authToken = result.githubPrivateCommentToken;
         minAjax({
           url: `${URL}${VERSION}/note/all`, // request URL
@@ -20,6 +20,10 @@ export const getAllNotes = ({ issueId, projectName, noteType, repoOwner }) => {
             projectName,
             noteType,
             repoOwner,
+          },
+          errorCallback(e) {
+            console.log(e);
+            reject(e);
           },
           success(results) {
             // Retrieve all the notes based on issue id
@@ -46,7 +50,7 @@ export const createNote = ({
 }) => {
   try {
     return new Promise((resolve, reject) => {
-      window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
+      window.chrome.storage.sync.get(['githubPrivateCommentToken'], (result) => {
         const authToken = result.githubPrivateCommentToken;
         minAjax({
           url: `${URL}${VERSION}/note`, // request URL
@@ -79,6 +83,7 @@ export const createNote = ({
       });
     });
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };
@@ -86,8 +91,8 @@ export const createNote = ({
 // eslint-disable-next-line
 export const removeNote = ({ noteId, issueId, projectName, noteType, repoOwner }) => {
   try {
-    return new Promise(resolve => {
-      window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
+    return new Promise((resolve) => {
+      window.chrome.storage.sync.get(['githubPrivateCommentToken'], (result) => {
         const authToken = result.githubPrivateCommentToken;
         minAjax({
           url: `${URL}${VERSION}/note/delete`, // request URL
@@ -121,8 +126,8 @@ export const removeNote = ({ noteId, issueId, projectName, noteType, repoOwner }
 // eslint-disable-next-line
 export const toggleVisibilityApi = ({ noteId, noteVisibility }) => {
   try {
-    return new Promise(resolve => {
-      window.chrome.storage.sync.get(['githubPrivateCommentToken'], result => {
+    return new Promise((resolve) => {
+      window.chrome.storage.sync.get(['githubPrivateCommentToken'], (result) => {
         const authToken = result.githubPrivateCommentToken;
         minAjax({
           url: `${URL}${VERSION}/note/edit`, // request URL
