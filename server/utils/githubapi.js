@@ -34,14 +34,13 @@ const checkUserIsACollaborator = async ({
   const apiUrl = `${process.env.GITHUB_API_URL}repos/${repoOwner}/${projectName}/collaborators/${userName}`;
 
   try {
-    const result = await axios.get(apiUrl, {
+    await axios.get(apiUrl, {
       headers: { Authorization: `token ${accessToken}` },
     });
 
-    return result.data;
+    return true;
   } catch (error) {
-    console.log("Get repo access error", error);
-    return error.data;
+    return false;
   }
 };
 
