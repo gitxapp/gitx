@@ -21,7 +21,8 @@ export default async (req, res, next) => {
         if (!tokenExpired) {
           res.status(401).send({
             status: 401,
-            message: "Token expired, please login again",
+            message:
+              "Sorry, your GitX token has expired, please do login again.",
             logout: true,
           });
         }
