@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 window.chrome.runtime.setUninstallURL(UN_INSTALL_URL);
 window.chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
-    window.chrome.tabs.create({ url: INSTALL_URL });
+    // window.chrome.tabs.create({ url: INSTALL_URL });
   }
 });
 
